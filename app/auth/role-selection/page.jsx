@@ -1,6 +1,16 @@
+'use client'
+import { useState } from 'react';
 import { Stethoscope, User, ShieldCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-export default function RoleSelectionPage({ }) {
+export default function RoleSelectionPage() {
+    const router = useRouter();
+
+    const onSelectRole = (role) => {
+        if (role === 'nurse') router.push('/nurse/dashboard');
+        if (role === 'patient') router.push('/patient/consent-screen');
+        if (role === 'admin') router.push('/admin/login');
+    };
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
             <div className="w-full max-w-2xl">
@@ -15,7 +25,7 @@ export default function RoleSelectionPage({ }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     {/* Nurse Card */}
                     <button
-                        // onClick={() => onSelectRole('nurse')}
+                        onClick={() => onSelectRole('nurse')}
                         className="group bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                     >
                         <div className="flex flex-col items-center text-center">
@@ -32,7 +42,7 @@ export default function RoleSelectionPage({ }) {
 
                     {/* Patient Card */}
                     <button
-                        // onClick={() => onSelectRole('patient')}
+                        onClick={() => onSelectRole('patient')}
                         className="group bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                     >
                         <div className="flex flex-col items-center text-center">

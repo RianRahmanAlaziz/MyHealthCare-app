@@ -7,7 +7,7 @@ export default function RegistrationPage() {
     const router = useRouter();
 
     const onNavigateToLogin = () => {
-        router.push("/login");
+        router.push("/");
     };
     return (
         <Registration onNavigateToLogin={onNavigateToLogin} />

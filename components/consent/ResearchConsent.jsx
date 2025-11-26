@@ -6,7 +6,7 @@ import { FileText, CheckCircle2 } from 'lucide-react';
 import { motion } from "framer-motion";
 
 
-export default function ResearchConsent({ onNavigateToRoleSelection }) {
+export default function ResearchConsent({ onNavigateToRoleSelection, onNavigateToLogin }) {
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState('accept');
 
@@ -19,7 +19,10 @@ export default function ResearchConsent({ onNavigateToRoleSelection }) {
         setShowModal(false);
         if (modalType === 'accept') {
             onNavigateToRoleSelection();
+        } else {
+            onNavigateToLogin();
         }
+
     };
 
     return (
