@@ -86,7 +86,7 @@ export default function InterventionSelection({ onSelectIntervention }) {
                             <button
                                 key={intervention.id}
                                 onClick={() => setSelected(intervention.id)}
-                                className={`bg-white rounded-3xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${isSelected ? 'ring-4 ring-teal-400' : ''
+                                className={`bg-white cursor-pointer rounded-3xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${isSelected ? 'ring-4 ring-teal-400' : ''
                                     }`}
                             >
                                 <div className="relative h-40 overflow-hidden">
@@ -151,7 +151,7 @@ export default function InterventionSelection({ onSelectIntervention }) {
                         <Button
                             onClick={() => selected && onSelectIntervention(selected)}
                             disabled={!selected}
-                            className="w-full h-14 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 text-white shadow-lg disabled:opacity-50"
+                            className="w-full h-14 cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 text-white shadow-lg disabled:opacity-50"
                         >
                             {selected ? 'Lanjutkan dengan Teknik yang Dipilih' : 'Pilih Teknik Relaksasi Terlebih Dahulu'}
                         </Button>

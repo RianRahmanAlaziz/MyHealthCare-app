@@ -7,7 +7,7 @@ export default function RoleSelectionPage() {
     const router = useRouter();
 
     const onSelectRole = (role) => {
-        if (role === 'nurse') router.push('/nurse/dashboard');
+        if (role === 'nurse') router.push('/nurse/consent-screen');
         if (role === 'patient') router.push('/patient/consent-screen');
         if (role === 'admin') router.push('/admin/login');
     };
