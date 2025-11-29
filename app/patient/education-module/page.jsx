@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useRouter } from "next/navigation";
-import EducationModule from '@/components/module/patient/EducationModule'
+import EducationModule from '@/components/patient/EducationModule'
 
 export default function EducationModulePage() {
     const router = useRouter();

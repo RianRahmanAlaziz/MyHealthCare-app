@@ -10,7 +10,7 @@ export default function ZungExplanation({ onNavigateToEducation }) {
 
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
                         <Heart className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-teal-700 mb-2">Skala Kecemasan Zung (SAS)</h1>
@@ -26,7 +26,7 @@ export default function ZungExplanation({ onNavigateToEducation }) {
                         mengenai gejala kecemasan yang mungkin Anda alami.
                     </p>
 
-                    <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-6 border border-teal-100 mb-6">
+                    <div className="bg-linear-to-br from-blue-50 to-teal-50 rounded-2xl p-6 border border-teal-100 mb-6">
                         <h3 className="text-gray-900 mb-4">Mengapa Ini Penting?</h3>
 
                         <ul className="space-y-3 text-gray-700">
@@ -114,7 +114,7 @@ export default function ZungExplanation({ onNavigateToEducation }) {
                 {/* Button */}
                 <Button
                     onClick={onNavigateToEducation}
-                    className="w-full h-14 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
+                    className="w-full h-14 rounded-xl bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
                 >
                     Saya Mengerti, Lanjutkan
                 </Button>

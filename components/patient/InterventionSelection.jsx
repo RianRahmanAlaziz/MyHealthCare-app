@@ -98,7 +98,7 @@ export default function InterventionSelection({ onSelectIntervention }) {
                                         className="w-full h-full object-cover"
                                     />
 
-                                    <div className={`absolute top-4 right-4 w-10 h-10 rounded-full bg-gradient-to-br ${intervention.color} flex items-center justify-center shadow-lg`}>
+                                    <div className={`absolute top-4 right-4 w-10 h-10 rounded-full bg-linear-to-br ${intervention.color} flex items-center justify-center shadow-lg`}>
                                         <Icon className="w-5 h-5 text-white" />
                                     </div>
 
@@ -135,7 +135,7 @@ export default function InterventionSelection({ onSelectIntervention }) {
                 </div>
 
                 {/* Info Box */}
-                <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-6 border border-teal-100 mb-6">
+                <div className="bg-linear-to-br from-blue-50 to-teal-50 rounded-2xl p-6 border border-teal-100 mb-6">
                     <h3 className="text-gray-900 mb-3">Informasi Penting</h3>
                     <ul className="space-y-2 text-gray-700 text-sm">
                         <li className="flex items-start gap-2"><span className="text-teal-600 mt-1">•</span>Semua teknik relaksasi efektif secara ilmiah</li>
@@ -146,12 +146,12 @@ export default function InterventionSelection({ onSelectIntervention }) {
                 </div>
 
                 {/* Bottom Button */}
-                <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent">
+                <div className="fixed bottom-0 left-0 right-0 p-6 bg-linear-to-t from-white via-white to-transparent">
                     <div className="max-w-4xl mx-auto">
                         <Button
                             onClick={() => selected && onSelectIntervention(selected)}
                             disabled={!selected}
-                            className="w-full h-14 cursor-pointer rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 text-white shadow-lg disabled:opacity-50"
+                            className="w-full h-14 cursor-pointer rounded-xl bg-linear-to-r from-teal-500 to-blue-500 text-white shadow-lg disabled:opacity-50"
                         >
                             {selected ? 'Lanjutkan dengan Teknik yang Dipilih' : 'Pilih Teknik Relaksasi Terlebih Dahulu'}
                         </Button>

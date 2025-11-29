@@ -15,6 +15,12 @@ export default function ResearchConsentPage() {
         router.push("/");
     };
     return (
-        <ResearchConsent onNavigateToRoleSelection={onNavigateToRoleSelection} onNavigateToLogin={onNavigateToLogin} />
+        <div className="min-h-screen bg-linear-to-br from-blue-50 via-teal-50 to-white">
+            <ResearchConsent
+                onNavigateToRoleSelection={onNavigateToRoleSelection}
+                onNavigateToLogin={onNavigateToLogin}
+            />
+        </div>
+
     )
 }

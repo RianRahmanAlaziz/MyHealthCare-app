@@ -34,7 +34,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
 
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
                         <User className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-teal-700 mb-2">Data Demografi Pasien</h1>
@@ -44,7 +44,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                 {/* Progress Bar */}
                 <div className="bg-gray-200 h-2 rounded-full mb-8 overflow-hidden">
                     <div
-                        className="bg-gradient-to-r from-teal-500 to-blue-500 h-full transition-all duration-300"
+                        className="bg-linear-to-r from-teal-500 to-blue-500 h-full transition-all duration-300"
                         style={{ width: `${(step / 2) * 100}%` }}
                     />
                 </div>
@@ -98,7 +98,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                 </div>
 
                                 {/* Gender */}
-                                <div className="space-y-2">
+                                <div className="space-y-2 ">
                                     <Label htmlFor="gender" className="text-gray-700">
                                         Jenis Kelamin <span className="text-red-500">*</span>
                                     </Label>
@@ -108,7 +108,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             setFormData({ ...formData, gender: value })
                                         }
                                     >
-                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl">
+                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl cursor-pointer">
                                             <SelectValue placeholder="Pilih jenis kelamin" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -129,7 +129,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             setFormData({ ...formData, hdDuration: value })
                                         }
                                     >
-                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl">
+                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl cursor-pointer">
                                             <SelectValue placeholder="Pilih durasi" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -155,7 +155,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             setFormData({ ...formData, education: value })
                                         }
                                     >
-                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl">
+                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl cursor-pointer">
                                             <SelectValue placeholder="Pilih pendidikan" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -181,7 +181,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             setFormData({ ...formData, occupation: value })
                                         }
                                     >
-                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl">
+                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl cursor-pointer    ">
                                             <SelectValue placeholder="Pilih pekerjaan" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -207,7 +207,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             setFormData({ ...formData, maritalStatus: value })
                                         }
                                     >
-                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl">
+                                        <SelectTrigger className="h-12 border-gray-200 rounded-xl cursor-pointer">
                                             <SelectValue placeholder="Pilih status" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -243,7 +243,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
 
                             <Button
                                 type="submit"
-                                className="flex-1 h-12 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
+                                className="flex-1 h-12 rounded-xl bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
                             >
                                 {step === 1 ? 'Selanjutnya' : 'Lanjutkan'}
                                 <ArrowRight className="w-5 h-5 ml-2" />

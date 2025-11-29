@@ -113,7 +113,7 @@ export default function InterventionSession({ intervention }) {
 
                 <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-6">
 
-                    <div className="relative h-64 bg-gradient-to-br from-gray-900 to-gray-800">
+                    <div className="relative h-64 bg-linear-to-br from-gray-900 to-gray-800">
                         <Image
                             src={currentIntervention.image}
                             alt={currentIntervention.title}
@@ -124,7 +124,7 @@ export default function InterventionSession({ intervention }) {
                         />
 
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${currentIntervention.color} flex items-center justify-center shadow-2xl`}>
+                            <div className={`w-20 h-20 rounded-full bg-linear-to-br ${currentIntervention.color} flex items-center justify-center shadow-2xl`}>
                                 {isCompleted ? (
                                     <CheckCircle2 className="w-10 h-10 text-white" />
                                 ) : (
@@ -149,7 +149,7 @@ export default function InterventionSession({ intervention }) {
                             </div>
                             <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
                                 <div
-                                    className={`h-full bg-gradient-to-r ${currentIntervention.color} transition-all duration-300`}
+                                    className={`h-full bg-linear-to-r ${currentIntervention.color} transition-all duration-300`}
                                     style={{ width: `${progress}%` }}
                                 />
                             </div>
@@ -159,7 +159,7 @@ export default function InterventionSession({ intervention }) {
                             <div className="flex gap-4 mb-6">
                                 <Button
                                     onClick={handlePlayPause}
-                                    className={`flex-1 h-14 rounded-xl text-white shadow-lg bg-gradient-to-r ${currentIntervention.color}`}
+                                    className={`flex-1 h-14 rounded-xl text-white shadow-lg bg-linear-to-r ${currentIntervention.color}`}
                                 >
                                     {isPlaying ? (
                                         <>
@@ -183,7 +183,7 @@ export default function InterventionSession({ intervention }) {
                                 )}
                             </div>
                         ) : (
-                            <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-2xl p-6 border-2 border-teal-200 mb-6">
+                            <div className="bg-linear-to-br from-teal-50 to-blue-50 rounded-2xl p-6 border-2 border-teal-200 mb-6">
                                 <div className="flex items-center gap-3 mb-2">
                                     <CheckCircle2 className="w-6 h-6 text-teal-600" />
                                     <h3 className="text-teal-900">Sesi Selesai!</h3>
@@ -207,7 +207,7 @@ export default function InterventionSession({ intervention }) {
                             <ul className="space-y-3">
                                 {currentIntervention.instructions.map((instruction, index) => (
                                     <li key={index} className="flex items-start gap-3 text-gray-700">
-                                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-sm">
+                                        <span className="shrink-0 w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-sm">
                                             {index + 1}
                                         </span>
                                         <span>{instruction}</span>
@@ -219,9 +219,9 @@ export default function InterventionSession({ intervention }) {
 
                 </div>
 
-                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-purple-100">
+                <div className="bg-linear-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-purple-100">
                     <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
                             <Heart className="w-6 h-6 text-purple-600" />
                         </div>
                         <div>

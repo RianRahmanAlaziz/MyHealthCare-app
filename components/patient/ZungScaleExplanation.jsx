@@ -15,7 +15,7 @@ export function ZungScaleExplanation({ onComplete }) {
             >
                 {/* Header */}
                 <div className="text-center mb-6">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-teal-500 rounded-2xl mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-blue-500 to-teal-500 rounded-2xl mb-4 shadow-lg">
                         <Brain className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-blue-900 mb-2">Penjelasan Skala Zung</h1>
@@ -43,7 +43,7 @@ export function ZungScaleExplanation({ onComplete }) {
                             </div>
 
                             {/* Visual Scale */}
-                            <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-6">
+                            <div className="bg-linear-to-br from-blue-50 to-teal-50 rounded-2xl p-6">
                                 <h3 className="text-teal-600 mb-4">Skala Penilaian Emosional</h3>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -153,7 +153,7 @@ export function ZungScaleExplanation({ onComplete }) {
                     <div className="p-6 border-t border-blue-100">
                         <Button
                             onClick={onComplete}
-                            className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg"
+                            className="w-full h-12 rounded-xl bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg"
                         >
                             Saya Mengerti, Lanjutkan
                         </Button>

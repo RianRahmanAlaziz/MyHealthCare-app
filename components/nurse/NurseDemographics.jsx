@@ -28,7 +28,7 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
             <div className="max-w-2xl mx-auto py-8">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-blue-400 to-blue-600 mb-4 shadow-lg">
                         <Stethoscope className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-blue-700 mb-2">Data Demografi Perawat</h1>
@@ -197,7 +197,7 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
 
                         <Button
                             type="submit"
-                            className="w-full h-14 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg cursor-pointer"
+                            className="w-full h-14 rounded-xl bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg cursor-pointer"
                         >
                             Lanjutkan ke Skala Kecemasan
                             <ArrowRight className="w-5 h-5 ml-2" />

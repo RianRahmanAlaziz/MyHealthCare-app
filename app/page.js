@@ -2,19 +2,16 @@
 
 import React from 'react'
 import { useRouter } from "next/navigation";
-import Login from '@/components/auth/Login'
+import { Onboarding } from '../components/Onboarding';
 
 export default function home() {
   const router = useRouter();
 
-  const onNavigateToRegistration = () => {
-    router.push("/auth/registration");
-  };
-  const onNavigateToConsent = () => {
-    router.push("/auth/research-consent");
+  const onComplete = () => {
+    router.push("/auth/login");
   };
 
   return (
-    <Login onNavigateToRegistration={onNavigateToRegistration} onNavigateToConsent={onNavigateToConsent} />
+    <Onboarding onComplete={onComplete} />
   )
 }

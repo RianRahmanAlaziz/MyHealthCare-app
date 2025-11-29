@@ -68,7 +68,7 @@ export default function ZungScale({ onNavigateToEducation }) {
 
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-blue-400 to-blue-600 mb-4 shadow-lg">
                         <Heart className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-blue-700 mb-2">Skala Kecemasan Zung (SAS)</h1>
@@ -83,7 +83,7 @@ export default function ZungScale({ onNavigateToEducation }) {
                     </div>
                     <div className="bg-gray-200 h-3 rounded-full overflow-hidden">
                         <div
-                            className="bg-gradient-to-r from-blue-500 to-teal-500 h-full transition-all duration-300"
+                            className="bg-linear-to-r from-blue-500 to-teal-500 h-full transition-all duration-300"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
@@ -147,7 +147,7 @@ export default function ZungScale({ onNavigateToEducation }) {
                     <Button
                         onClick={handleNext}
                         disabled={!answers[currentQuestion]}
-                        className="flex-1 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 h-12 rounded-xl bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {currentQuestion === questions.length - 1 ? 'Selesai' : 'Selanjutnya'}
                         <ArrowRight className="w-5 h-5 ml-2" />

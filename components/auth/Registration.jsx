@@ -146,7 +146,7 @@ export default function Registration({ onNavigateToLogin }) {
 
                         <Button
                             type="submit"
-                            className="w-full h-12 bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white rounded-xl shadow-lg cursor-pointer"
+                            className="w-full h-12 bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white rounded-xl shadow-lg cursor-pointer"
                         >
                             {step === 1 ? 'Lanjutkan' : 'Daftar'}
                         </Button>

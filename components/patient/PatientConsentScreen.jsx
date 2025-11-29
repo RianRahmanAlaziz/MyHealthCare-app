@@ -13,7 +13,7 @@ export default function PatientConsentScreen({ onNavigateToDemographics }) {
             <div className="max-w-2xl mx-auto py-8">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
                         <Shield className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-teal-700 mb-2">Informed Consent Pasien</h1>
@@ -26,7 +26,7 @@ export default function PatientConsentScreen({ onNavigateToDemographics }) {
                     {/* Privacy Card */}
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                         <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
                                 <Lock className="w-6 h-6 text-blue-600" />
                             </div>
                             <div>
@@ -42,7 +42,7 @@ export default function PatientConsentScreen({ onNavigateToDemographics }) {
                     {/* Purpose Card */}
                     <div className="bg-white rounded-2xl shadow-lg p-6">
                         <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
+                            <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
                                 <Eye className="w-6 h-6 text-teal-600" />
                             </div>
                             <div>
@@ -69,7 +69,7 @@ export default function PatientConsentScreen({ onNavigateToDemographics }) {
                     </div>
 
                     {/* Rights Card */}
-                    <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-6 border border-teal-100">
+                    <div className="bg-linear-to-br from-blue-50 to-teal-50 rounded-2xl p-6 border border-teal-100">
                         <h3 className="text-gray-900 mb-3">Hak Anda sebagai Partisipan</h3>
                         <ul className="space-y-2 text-gray-700">
                             <li className="flex items-start gap-2">
@@ -93,13 +93,13 @@ export default function PatientConsentScreen({ onNavigateToDemographics }) {
                 </div>
 
                 {/* Consent Checkbox */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <div className="flex items-start gap-4">
+                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 cursor-pointer">
+                    <div className="flex items-start gap-4  cursor-pointer">
                         <Checkbox
                             id="consent"
                             checked={agreed}
                             onCheckedChange={(checked) => setAgreed(!!checked)}
-                            className="mt-1"
+                            className="mt-1  cursor-pointer"
                         />
                         <label htmlFor="consent" className="text-gray-700 cursor-pointer">
                             <span className="block mb-1">
@@ -118,7 +118,7 @@ export default function PatientConsentScreen({ onNavigateToDemographics }) {
                 <Button
                     onClick={onNavigateToDemographics}
                     disabled={!agreed}
-                    className="w-full h-14 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full h-14 rounded-xl bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                     Lanjutkan
                 </Button>

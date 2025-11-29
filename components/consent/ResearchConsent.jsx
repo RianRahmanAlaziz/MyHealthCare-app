@@ -33,7 +33,7 @@ export default function ResearchConsent({ onNavigateToRoleSelection, onNavigateT
                 className="max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8 pt-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
                         <FileText className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-teal-700 mb-2">Informed Consent Penelitian</h1>
@@ -141,7 +141,7 @@ export default function ResearchConsent({ onNavigateToRoleSelection, onNavigateT
                     </Button>
                     <Button
                         onClick={() => handleConsent(true)}
-                        className="flex-1 h-14 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
+                        className="flex-1 h-14 rounded-xl bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
                     >
                         Saya Bersedia
                     </Button>
@@ -154,8 +154,8 @@ export default function ResearchConsent({ onNavigateToRoleSelection, onNavigateT
                     <DialogHeader>
                         <div className="flex justify-center mb-4">
                             <div
-                                className={`w-16 h-16 rounded-full flex items-center justify-center ${modalType === 'accept'
-                                    ? 'bg-gradient-to-br from-teal-400 to-blue-500'
+                                className={`w-16 h-16  rounded-full flex items-center justify-center ${modalType === 'accept'
+                                    ? 'bg-linear-to-br from-teal-400 to-blue-500'
                                     : 'bg-gray-100'
                                     }`}
                             >
@@ -180,7 +180,7 @@ export default function ResearchConsent({ onNavigateToRoleSelection, onNavigateT
 
                     <Button
                         onClick={handleModalClose}
-                        className="w-full h-12 rounded-xl bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white"
+                        className="w-full h-12 rounded-xl cursor-pointer bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white"
                     >
                         {modalType === 'accept' ? 'Lanjutkan' : 'Tutup'}
                     </Button>

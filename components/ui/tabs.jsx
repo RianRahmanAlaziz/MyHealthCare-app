@@ -22,7 +22,7 @@ export default function Tabs({ modules, completedModules, toggleModule }) {
                                 flex flex-col items-center gap-2 p-3 rounded-xl w-full h-full
                                 cursor-pointer transition
                                 ${active
-                                    ? "bg-gradient-to-br from-blue-500 to-teal-500 text-white"
+                                    ? "bg-linear-to-br from-blue-500 to-teal-500 text-white"
                                     : "bg-white text-gray-700 border border-gray-200"
                                 }
                             `}
@@ -64,7 +64,7 @@ export default function Tabs({ modules, completedModules, toggleModule }) {
                                 className={`flex-1 h-12 rounded-xl text-white shadow-lg cursor-pointer
                                     ${completedModules.includes(module.id)
                                         ? "bg-green-500 hover:bg-green-600"
-                                        : "bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600"
+                                        : "bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600"
                                     }
                                 `}
                             >

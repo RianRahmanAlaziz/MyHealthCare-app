@@ -1,4 +1,4 @@
-import NurseEducationModule from '@/components/module/nurse/NurseEducationModule'
+import NurseEducationModule from '@/components/nurse/NurseEducationModule'
 import React from 'react'
 
 export default function NurseEducationModulePage() {

@@ -7,9 +7,12 @@ export default function RegistrationPage() {
     const router = useRouter();
 
     const onNavigateToLogin = () => {
-        router.push("/");
+        router.push("/auth/login");
     };
     return (
-        <Registration onNavigateToLogin={onNavigateToLogin} />
+        <div className="min-h-screen bg-linear-to-br from-blue-50 via-teal-50 to-white">
+            <Registration onNavigateToLogin={onNavigateToLogin} />
+        </div>
+
     )
 }
