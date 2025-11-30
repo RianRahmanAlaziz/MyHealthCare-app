@@ -8,10 +8,13 @@ export default function home() {
   const router = useRouter();
 
   const onComplete = () => {
-    router.push("/auth/login");
+    router.push("/informed-consent");
   };
 
   return (
-    <Onboarding onComplete={onComplete} />
+
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-teal-50 to-white">
+      <Onboarding onComplete={onComplete} />
+    </div>
   )
 }

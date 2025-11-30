@@ -4,12 +4,11 @@ import ResearchConsent from '@/components/consent/ResearchConsent'
 import React from 'react'
 
 
-
-export default function ResearchConsentPage() {
+export default function InformedConsentPage() {
     const router = useRouter();
 
     const onNavigateToRoleSelection = () => {
-        router.push("/auth/role-selection");
+        router.push("/auth/login");
     };
     const onNavigateToLogin = () => {
         router.push("/");
@@ -21,6 +20,5 @@ export default function ResearchConsentPage() {
                 onNavigateToLogin={onNavigateToLogin}
             />
         </div>
-
     )
 }

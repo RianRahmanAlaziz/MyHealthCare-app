@@ -11,7 +11,7 @@ export default function LoginPage() {
         router.push("/auth/registration");
     };
     const onNavigateToConsent = () => {
-        router.push("/auth/research-consent");
+        router.push("/auth/role-selection");
     };
 
     return (
