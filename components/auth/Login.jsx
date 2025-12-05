@@ -6,20 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { HeartPulse, Lock, Phone } from 'lucide-react';
 
-export default function Login({ onNavigateToRegistration, onNavigateToConsent, onAdminLogin }) {
-    const [phone, setPhone] = useState('');
+export default function Login({ onNavigateToRegistration, handleLogin }) {
+    const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = (e) => {
-        e.preventDefault();
 
-        // Mock admin login
-        if (phone === 'admin' && password === 'admin') {
-            onAdminLogin();
-        } else {
-            onNavigateToConsent();
-        }
-    };
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
@@ -43,19 +34,27 @@ export default function Login({ onNavigateToRegistration, onNavigateToConsent, o
                     transition={{ delay: 0.2 }}
                     className="bg-white rounded-3xl shadow-xl p-8">
                     <h2 className="text-gray-900 mb-6 text-center">Masuk ke Akun Anda</h2>
-                    <form onSubmit={handleLogin} className="space-y-5">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleLogin(identifier, password);
+                        }}
+                        className="space-y-5">
                         <div className="space-y-2">
-                            <Label htmlFor="phone" className="text-gray-700">Nomor Telepon</Label>
+                            <Label htmlFor="identifier" className="text-gray-700">Nomor Telepon</Label>
                             <div className="relative">
                                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <Input
-                                    id="phone"
-                                    type="tel"
+                                    id="identifier"
+                                    name="identifier"
+                                    type="text"
                                     placeholder="+62 812-3456-7890"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
+                                    value={identifier}
+                                    onChange={(e) => setIdentifier(e.target.value)}
                                     className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
                                     required
+                                    autoFocus
+                                    autoComplete="username"
                                 />
                             </div>
                         </div>
@@ -66,13 +65,16 @@ export default function Login({ onNavigateToRegistration, onNavigateToConsent, o
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <Input
                                     id="password"
+                                    name="password"
                                     type="password"
                                     placeholder="••••••••"
                                     value={password}
+                                    autoComplete="current-password"
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
                                     required
                                 />
+
                             </div>
                         </div>
 

@@ -1,11 +1,16 @@
 'use client'
 import Registration from '@/components/auth/Registration'
-import React from 'react'
+import { useEffect } from 'react';
 import { useRouter } from "next/navigation";
+import { toast } from 'react-toastify' // ✅ Tambahkan ini
+import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
 
 export default function RegistrationPage() {
     const router = useRouter();
+    useEffect(() => {
+        document.title = "Registration | HealthCare Research";
 
+    }, [router]);
     const onNavigateToLogin = () => {
         router.push("/auth/login");
     };

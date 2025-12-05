@@ -50,7 +50,7 @@ function UsersList() {
                     <button
                         onClick={openAddUserModal}
                         className="btn btn-secondary shadow-md mr-2">
-                        <UserPlus className='pr-1.5' /> New Users
+                        <UserPlus className='pr-1.5' />  Users
                     </button>
 
                     <div className="hidden md:block mx-auto text-slate-500"></div>

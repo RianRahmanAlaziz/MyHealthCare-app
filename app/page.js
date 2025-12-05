@@ -1,14 +1,16 @@
 "use client";
 
-import React from 'react'
+import { useEffect } from 'react'
 import { useRouter } from "next/navigation";
 import { Onboarding } from '../components/Onboarding';
 
 export default function home() {
   const router = useRouter();
-
+  useEffect(() => {
+    document.title = "HealthCare Research";
+  }, []);
   const onComplete = () => {
-    router.push("/informed-consent");
+    router.push("/auth/informed-consent");
   };
 
   return (

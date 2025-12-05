@@ -1,15 +1,56 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Stethoscope, User, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify' // ✅ Tambahkan ini
+import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
 
 export default function RoleSelectionPage() {
     const router = useRouter();
+    useEffect(() => {
+        document.title = "Role Selection | HealthCare Research";
 
-    const onSelectRole = (role) => {
-        if (role === 'nurse') router.push('/nurse/consent-screen');
-        if (role === 'patient') router.push('/patient/consent-screen');
-        if (role === 'admin') router.push('/admin/login');
+    }, []);
+
+    const onSelectRole = async (roles) => {
+        try {
+            const token = sessionStorage.getItem('token');
+
+            if (!token) {
+                toast.error('Silakan login ulang');
+                router.push('/auth/login');
+                return;
+            }
+
+            const res = await fetch('http://127.0.0.1:8000/api/auth/update-role', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ roles })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.message || 'Gagal mengubah role');
+                return;
+            }
+            sessionStorage.setItem("user", JSON.stringify(data.user));
+            toast.success('Role berhasil dipilih');
+
+            // ✅ Redirect sesuai role
+            setTimeout(() => {
+                if (roles === 'Perawat') router.push('/nurse/consent-screen');
+                if (roles === 'Pasient') router.push('/patient/consent-screen');
+                if (roles === 'Admin') router.push('/dashboard');
+            }, 800);
+
+        } catch (err) {
+            console.error(err);
+            toast.error('Terjadi kesalahan server');
+        }
     };
     return (
         <div className="min-h-screen bg-linear-to-br from-blue-50 via-teal-50 to-white">
@@ -26,7 +67,7 @@ export default function RoleSelectionPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {/* Nurse Card */}
                         <button
-                            onClick={() => onSelectRole('nurse')}
+                            onClick={() => onSelectRole('Perawat')}
                             className="group bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                         >
                             <div className="flex flex-col items-center text-center">
@@ -43,7 +84,7 @@ export default function RoleSelectionPage() {
 
                         {/* Patient Card */}
                         <button
-                            onClick={() => onSelectRole('patient')}
+                            onClick={() => onSelectRole('Pasient')}
                             className="group bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                         >
                             <div className="flex flex-col items-center text-center">

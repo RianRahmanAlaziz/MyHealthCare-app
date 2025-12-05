@@ -20,23 +20,8 @@ function Sidebar() {
                     href="/dashboard/users"
                     icon={
                         <SquareUser />
-                    }>
-                    <Sidelink
-                        title="Users List"
-                        href="/dashboard/users/list"
-                        icon={<Users />}
-                    />
-                    <Sidelink
-                        title="Role Management"
-                        href="/dashboard/users/role"
-                        icon={<UserCog />}
-                    />
-                    <Sidelink
-                        title="Permission Management"
-                        href="/dashboard/users/permission"
-                        icon={<FolderKey />}
-                    />
-                </Sidelink>
+                    }
+                />
                 <Sidelink
                     title="Master Data SDM"
                     icon={

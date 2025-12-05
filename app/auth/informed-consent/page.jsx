@@ -1,12 +1,17 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import ResearchConsent from '@/components/consent/ResearchConsent'
-import React from 'react'
+import { useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 
 
 export default function InformedConsentPage() {
     const router = useRouter();
+    useEffect(() => {
+        document.title = "Informed Consent | HealthCare Research";
 
+    }, []);
     const onNavigateToRoleSelection = () => {
         router.push("/auth/login");
     };

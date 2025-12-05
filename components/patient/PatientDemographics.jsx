@@ -6,25 +6,47 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowRight, User } from 'lucide-react';
+import axiosInstance from "@/lib/axiosInstance";
+
 
 export default function PatientDemographics({ onNavigateToZungExplanation }) {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
-        initials: '',
-        age: '',
+        name: '',
+        usia: '',
         gender: '',
         hdDuration: '',
         education: '',
-        occupation: '',
+        pekerjaan: '',
         maritalStatus: '',
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (step === 1) {
             setStep(2);
         } else {
-            onNavigateToZungExplanation();
+
+            try {
+                const res = await axiosInstance.post("/pasien", {
+                    name: formData.name,
+                    usia: formData.usia,
+                    gender: formData.gender,
+                    hdDuration: formData.hdDuration,
+                    education: formData.education,
+                    pekerjaan: formData.pekerjaan,
+                    maritalStatus: formData.maritalStatus,
+                });
+
+                if (res.data.success) {
+                    // ✅ BERHASIL SIMPAN → LANJUT KE ZUNG
+                    onNavigateToZungExplanation();
+                }
+
+            } catch (error) {
+                console.error("Gagal menyimpan:", error.response?.data || error);
+                toast.error(error.response?.data?.message || "Gagal menyimpan data");
+            }
         }
     };
 
@@ -57,19 +79,18 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                             <>
                                 {/* Initials */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="initials" className="text-gray-700">
+                                    <Label htmlFor="name" className="text-gray-700">
                                         Nama Inisial <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
-                                        id="initials"
+                                        id="name"
                                         type="text"
                                         placeholder="Contoh: AS"
-                                        value={formData.initials}
+                                        value={formData.name}
                                         onChange={(e) =>
-                                            setFormData({ ...formData, initials: e.target.value })
+                                            setFormData({ ...formData, name: e.target.value })
                                         }
                                         className="h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
-                                        maxLength={3}
                                         required
                                     />
                                     <p className="text-sm text-gray-500">
@@ -79,16 +100,16 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
 
                                 {/* Age */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="age" className="text-gray-700">
+                                    <Label htmlFor="usia" className="text-gray-700">
                                         Usia <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
-                                        id="age"
+                                        id="usia"
                                         type="number"
                                         placeholder="Contoh: 45"
-                                        value={formData.age}
+                                        value={formData.usia}
                                         onChange={(e) =>
-                                            setFormData({ ...formData, age: e.target.value })
+                                            setFormData({ ...formData, usia: e.target.value })
                                         }
                                         className="h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
                                         min="18"
@@ -112,8 +133,8 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             <SelectValue placeholder="Pilih jenis kelamin" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="male">Laki-laki</SelectItem>
-                                            <SelectItem value="female">Perempuan</SelectItem>
+                                            <SelectItem value="Laki-laki">Laki-laki</SelectItem>
+                                            <SelectItem value="Perempuan">Perempuan</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -170,15 +191,15 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Select>
                                 </div>
 
-                                {/* Occupation */}
+                                {/* pekerjaan */}
                                 <div className="space-y-2">
                                     <Label className="text-gray-700">
                                         Pekerjaan <span className="text-red-500">*</span>
                                     </Label>
                                     <Select
-                                        value={formData.occupation}
+                                        value={formData.pekerjaan}
                                         onValueChange={(value) =>
-                                            setFormData({ ...formData, occupation: value })
+                                            setFormData({ ...formData, pekerjaan: value })
                                         }
                                     >
                                         <SelectTrigger className="h-12 border-gray-200 rounded-xl cursor-pointer    ">

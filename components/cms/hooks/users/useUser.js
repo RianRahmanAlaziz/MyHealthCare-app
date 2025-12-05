@@ -14,6 +14,7 @@ export default function useUser() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
+        phone: "",
         password: "",
     });
 
@@ -81,7 +82,7 @@ export default function useUser() {
 
             await fetchUsers();
             setIsOpen(false);
-            setFormData({ name: '', email: '', password: '' });
+            setFormData({ name: '', phone: '', email: '', password: '' });
             // ✅ Toast notifikasi sukses
             if (mode === 'edit') {
                 toast.info("User berhasil diperbarui");
@@ -99,7 +100,7 @@ export default function useUser() {
 
     // 🔹 Buka modal Add
     const openAddUserModal = () => {
-        setFormData({ name: '', email: '', password: '' });
+        setFormData({ name: '', phone: '', email: '', password: '' });
         setModalData({ title: 'Add New User', mode: 'add', editId: null });
         setIsOpen(true);
     };
@@ -107,6 +108,7 @@ export default function useUser() {
     const openEditUserModal = (user) => {
         setFormData({
             name: user.name || '',
+            phone: user.phone || '',
             email: user.email || '',
             password: '',
             roles: Array.isArray(user.roles) && user.roles.length > 0

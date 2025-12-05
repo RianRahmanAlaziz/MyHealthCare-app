@@ -1,26 +1,72 @@
 'use client'
+import axios from "axios";
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Lock, Phone, User } from 'lucide-react';
+import { toast } from 'react-toastify' // ✅ Tambahkan ini
+import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
 
 export default function Registration({ onNavigateToLogin }) {
     const [step, setStep] = useState(1);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
         password: '',
         confirmPassword: '',
     });
+    const isPasswordMatch =
+        formData.confirmPassword.length > 0 &&
+        formData.password === formData.confirmPassword;
+    const handleRegister = async () => {
+        if (formData.password !== formData.confirmPassword) {
+            setErrorMsg("Password dan konfirmasi tidak sama");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const res = await axios.post("http://127.0.0.1:8000/api/auth/register", {
+                name: formData.name,
+                phone: formData.phone,
+                password: formData.password,
+            });
+
+            // Jika sukses → redirect ke login
+            toast.success('Registrasi berhasil!');
+            onNavigateToLogin();
+        } catch (err) {
+            const res = err.response;
+
+            // Error validasi dari Laravel (422)
+            if (res?.status === 422 && res.data?.errors) {
+                const firstError = Object.values(res.data.errors)[0][0];
+                toast.error(firstError);
+                setLoading(false);
+                return;
+            }
+            // Error custom dari Laravel
+            if (res?.data?.message) {
+                toast.error(res.data.message);
+                setLoading(false);
+                return;
+            }
+            toast.error('Terjadi kesalahan pada server');
+        }
+
+        setLoading(false);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (step === 1) {
             setStep(2);
         } else {
-            onNavigateToLogin();
+            handleRegister();
         }
     };
 
@@ -43,12 +89,21 @@ export default function Registration({ onNavigateToLogin }) {
 
                 {/* Progress Indicator */}
                 <div className="flex items-center justify-center gap-2 mb-8">
-                    <div className={`h-2 w-16 rounded-full transition-colors ${step >= 1 ? 'bg-teal-500' : 'bg-gray-200'}`} />
-                    <div className={`h-2 w-16 rounded-full transition-colors ${step >= 2 ? 'bg-teal-500' : 'bg-gray-200'}`} />
+                    {/* Step 1 */}
+                    <button
+                        onClick={() => setStep(1)}
+                        className={`cursor-pointer h-2 w-16 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-teal-500' : 'bg-gray-200 hover:bg-gray-300'}`}
+                    />
+
+                    {/* Step 2 */}
+                    <button
+                        onClick={() => setStep(2)}
+                        className={`cursor-pointer h-2 w-16 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-teal-500' : 'bg-gray-200 hover:bg-gray-300'}`}
+                    />
                 </div>
 
-                <motion.div
 
+                <motion.div
                     className="bg-white rounded-3xl shadow-xl p-8">
                     <h2 className="text-gray-900 mb-2 text-center">
                         {step === 1 ? 'Buat Akun Baru' : 'Buat Kata Sandi'}
@@ -68,12 +123,14 @@ export default function Registration({ onNavigateToLogin }) {
                                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <Input
                                             id="name"
+                                            name="name"
                                             type="text"
                                             placeholder="Nama Anda"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                             className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
                                             required
+                                            autoFocus
                                         />
                                     </div>
                                 </div>
@@ -85,15 +142,18 @@ export default function Registration({ onNavigateToLogin }) {
                                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <Input
                                             id="phone"
+                                            name="phone"
                                             type="tel"
                                             placeholder="+62 812-3456-7890"
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                             className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
                                             required
+
                                         />
                                     </div>
                                 </div>
+
 
                             </>
                         ) : (
@@ -102,16 +162,19 @@ export default function Registration({ onNavigateToLogin }) {
                                 <div className="space-y-2">
                                     <Label htmlFor="password" className="text-gray-700">Kata Sandi</Label>
                                     <div className="relative">
-                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 " />
                                         <Input
                                             id="password"
+                                            name="password"
                                             type="password"
                                             placeholder="Minimal 8 karakter"
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                             className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
                                             required
+                                            autoFocus
                                             minLength={8}
+                                            autoComplete="current-password"
                                         />
                                     </div>
                                 </div>
@@ -120,18 +183,56 @@ export default function Registration({ onNavigateToLogin }) {
                                 <div className="space-y-2">
                                     <Label htmlFor="confirmPassword" className="text-gray-700">Konfirmasi Kata Sandi</Label>
                                     <div className="relative">
-                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <Lock className={`absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 
+                                             ${formData.confirmPassword.length === 0
+                                                ? "text-gray-400"
+                                                : isPasswordMatch
+                                                    ? "text-gray-400"
+                                                    : "text-red-400"}
+                                                        `} />
                                         <Input
                                             id="confirmPassword"
                                             type="password"
                                             placeholder="Ketik ulang kata sandi"
                                             value={formData.confirmPassword}
                                             onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                            className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
+                                            className={`
+                                                    pl-12 h-12 rounded-xl 
+                                                    border 
+                                                    transition-all
+                                                    ${formData.confirmPassword.length === 0
+                                                    ? "border-gray-200 focus:ring-2 focus:ring-teal-400"
+                                                    : isPasswordMatch
+                                                        ? "border-gray-200 focus:ring-2 focus:ring-teal-400"
+                                                        : "border-red-500 focus:ring-2 focus:ring-red-400"}
+                                                    `}
                                             required
+                                            autoComplete="current-password"
                                         />
+
                                     </div>
                                 </div>
+                                {/* Realtime Indicator */}
+                                {formData.confirmPassword.length > 0 && (
+                                    <motion.p
+                                        key={isPasswordMatch ? "match" : "not-match"} // penting agar animasi re-run
+                                        initial={{ opacity: 0, y: -5 }}
+                                        animate={{
+                                            opacity: 1,
+                                            y: 0,
+                                            x: isPasswordMatch ? 0 : [0, -6, 6, -4, 4, -2, 2, 0], // shake effect
+                                        }}
+                                        transition={{
+                                            duration: 0.4,
+                                            ease: "easeOut",
+                                        }}
+                                        className={`text-sm mt-1 
+            ${isPasswordMatch ? "text-green-600" : "text-red-600"}
+        `}
+                                    >
+                                        {isPasswordMatch ? "✓ Password cocok" : "✗ Password tidak sama"}
+                                    </motion.p>
+                                )}
 
                                 {/* Info Box */}
                                 <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">

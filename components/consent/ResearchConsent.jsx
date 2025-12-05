@@ -50,82 +50,50 @@ export default function ResearchConsent({ onNavigateToRoleSelection, onNavigateT
                         <div className="space-y-4 text-gray-700">
                             {/* Semua konten tetap sama */}
                             <section>
-                                <h3 className="text-teal-700 mb-3">Pendahuluan</h3>
+                                <h3 className="text-teal-700 mb-3">Dengan hormat</h3>
                                 <p>
-                                    Anda diundang untuk berpartisipasi dalam penelitian yang berjudul <strong>"Pengaruh Intervensi
-                                        Teknik Relaksasi terhadap Tingkat Kecemasan Pasien Hemodialisis"</strong>. Penelitian ini
-                                    dilakukan oleh tim peneliti dari Fakultas Keperawatan untuk memahami dan meningkatkan
-                                    kualitas perawatan pasien hemodialisis.
+                                    Kami mahasiswa <strong>STIKes Widya Dharma Husada Program Studi S1 Keperawatan</strong> <br />
+                                    Mengajukan permohonan izin penelitian dan pengambilan data di RSUD Kabupaten Tangerang untuk tugas akhir berjudul:
+                                    <strong>“E-Modul Keperawatan dalam Mereduksi Ansietas pada Klien Hemodialisa di RSUD Kabupaten Tangerang.”</strong>
                                 </p>
+                                <div className="mt-2 p-4 bg-blue-50 rounded-xl">
+                                    <div className="">
+                                        <p><strong>NIM: 221030122185 </strong></p>
+                                        <p><strong>Arimbi Qayla Darmaisya</strong></p>
+                                    </div>
+                                    <div className="pt-2">
+                                        <p><strong>NIM: 221030122187 </strong></p>
+                                        <p><strong>Elis Holisoh</strong></p>
+                                    </div>
+                                    <div className="pt-2">
+                                        <p><strong>NIM: 221030122198 </strong></p>
+                                        <p><strong>Melani Putri Yuliana</strong></p>
+                                    </div>
+                                    <div className="pt-2">
+                                        <p><strong>NIM: 221030122204 </strong></p>
+                                        <p><strong>Dini Kusumaningsih</strong></p>
+                                    </div>
+                                </div>
                             </section>
 
                             <section>
                                 <h3 className="text-teal-700 mb-3">Tujuan Penelitian</h3>
                                 <p>
-                                    Penelitian ini bertujuan untuk mengevaluasi efektivitas berbagai teknik relaksasi
-                                    (seperti terapi musik, pernapasan dalam, dan guided imagery) dalam mengurangi tingkat
-                                    kecemasan pada pasien yang menjalani hemodialisis rutin. Data yang dikumpulkan akan
-                                    membantu mengembangkan protokol perawatan yang lebih baik.
+                                    Penelitian ini bertujuan merancang, menerapkan, dan mengevaluasi efektivitas e-modul keperawatan dalam membantu klien hemodialisa mengurangi kecemasan selama menjalani terapi.
+                                    Mohon baca dan pahami poin berikut sebelum melanjutkan:
                                 </p>
                             </section>
                             <section>
-                                <h3 className="text-teal-700 mb-3">Prosedur Penelitian</h3>
-                                <p>
-                                    Jika Anda setuju untuk berpartisipasi, Anda akan diminta untuk:
-                                </p>
+
                                 <ul className="list-disc list-inside space-y-2 mt-2 ml-4">
-                                    <li>Mengisi kuesioner data demografi</li>
-                                    <li>Menyelesaikan Skala Kecemasan Zung (SAS)</li>
-                                    <li>Membaca modul edukasi tentang teknik relaksasi</li>
-                                    <li>Memilih dan mengikuti sesi intervensi teknik relaksasi</li>
-                                    <li>Mengisi kuesioner pengetahuan pre-test dan post-test</li>
+                                    <li>Partisipasi Anda sepenuhnya sukarela dan dapat dihentikan kapan saja tanpa konsekuensi.</li>
+                                    <li>Semua data dijamin anonim dan hanya digunakan untuk kepentingan penelitian.</li>
+                                    <li>Wawancara berlangsung ±10–15 menit.</li>
+                                    <li>Jika ada pertanyaan, Anda dapat menghubungi peneliti melalui nomor WhatsApp yang tertera.</li>
                                 </ul>
-                                <p className="mt-2">
-                                    Total waktu yang dibutuhkan sekitar 45-60 menit.
-                                </p>
-                            </section>
-                            <section>
-                                <h3 className="text-teal-700 mb-3">Risiko dan Manfaat</h3>
-                                <p className="mb-2">
-                                    <strong>Risiko:</strong> Risiko minimal. Beberapa pertanyaan mungkin menimbulkan
-                                    ketidaknyamanan emosional ringan. Anda dapat melewati pertanyaan apa pun atau
-                                    menghentikan partisipasi kapan saja.
-                                </p>
-                                <p>
-                                    <strong>Manfaat:</strong> Anda akan mempelajari teknik relaksasi yang dapat membantu
-                                    mengurangi kecemasan selama sesi hemodialisis. Kontribusi Anda akan membantu
-                                    meningkatkan perawatan untuk pasien hemodialisis di masa depan.
-                                </p>
+
                             </section>
 
-                            <section>
-                                <h3 className="text-teal-700 mb-3">Kerahasiaan</h3>
-                                <p>
-                                    Semua informasi yang Anda berikan akan dijaga kerahasiaannya. Data akan disimpan
-                                    secara anonim menggunakan kode identifikasi, dan hanya tim peneliti yang memiliki
-                                    akses. Hasil penelitian akan dipublikasikan tanpa identitas pribadi Anda.
-                                </p>
-                            </section>
-                            <section>
-                                <h3 className="text-teal-700 mb-3">Partisipasi Sukarela</h3>
-                                <p>
-                                    Partisipasi Anda bersifat sukarela. Anda dapat memilih untuk tidak berpartisipasi
-                                    atau mengundurkan diri dari penelitian kapan saja tanpa konsekuensi terhadap
-                                    perawatan medis Anda.
-                                </p>
-                            </section>
-
-                            <section>
-                                <h3 className="text-teal-700 mb-3">Kontak</h3>
-                                <p>
-                                    Jika Anda memiliki pertanyaan tentang penelitian ini, silakan hubungi:
-                                </p>
-                                <div className="mt-2 p-4 bg-blue-50 rounded-xl">
-                                    <p><strong>Dr. Ns. Siti Rahmawati, M.Kep</strong></p>
-                                    <p>Email: siti.rahmawati@university.ac.id</p>
-                                    <p>Telepon: +62 21 1234 5678</p>
-                                </div>
-                            </section>
                         </div>
                     </div>
                 </motion.div>
