@@ -2274,6 +2274,10 @@ select {
 
 .dropdown .dropdown-menu {
   transform: translate3d(-10000px, 0px, 0px) !important;
+  -webkit-transform: translate3d(-10000px, 0px, 0px) !important;
+  -moz-transform: translate3d(-10000px, 0px, 0px) !important;
+  -ms-transform: translate3d(-10000px, 0px, 0px) !important;
+  -o-transform: translate3d(-10000px, 0px, 0px) !important;
 }
 
 .dropdown .dropdown-custom {
@@ -2283,10 +2287,9 @@ select {
 .dropdown-menu {
   z-index: 9999;
   inset: 0px auto auto 0px;
-  transition: visibility 0s ease-in-out 0.2s, opacity 0.2s 0s;
   visibility: hidden;
   position: absolute;
-  opacity: 0;
+
 }
 
 .dropdown-custom {
@@ -2381,8 +2384,6 @@ select {
   transition-duration: 300ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-
 
 .dropdown-menu .dropdown-content .dropdown-footer {
   display: flex;

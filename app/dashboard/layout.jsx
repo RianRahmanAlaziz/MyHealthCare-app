@@ -4,6 +4,7 @@ import "@/style/css/app.css"
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
+import "tom-select/dist/css/tom-select.css";
 import { ToastContainer, toast } from 'react-toastify';
 import Topbar from "@/components/cms/layouts/Topbar";
 import Sidebar from "@/components/cms/layouts/Sidebar";

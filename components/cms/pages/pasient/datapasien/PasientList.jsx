@@ -6,14 +6,18 @@ import Modal from '@/components/cms/common/Modal';
 import { motion } from "framer-motion";
 import Modaldelete from '@/components/cms/common/Modaldelete';
 import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
-import useUser from '@/components/cms/hooks/users/useUser';
-import InputUsers from './InputUsers';
+import usePasien from '../../../hooks/master-data/usePasien';
+import InputPasien from './InputPasien';
 
-function UsersList() {
+export default function PasientList() {
+    useEffect(() => {
+        document.title = "Dashboard | Pasien Management";
+    }, []);
+
     const {
         isOpen,
         isOpenDelete,
-        users,
+        pasien,
         loading,
         searchTerm,
         setSearchTerm,
@@ -27,30 +31,24 @@ function UsersList() {
         setIsOpen,
         setIsOpenDelete,
         handlePageChange,
-        handleSaveUser,
-        openAddUserModal,
-        openEditUserModal,
+        handleSavePasien,
+        openAddPasienModal,
+        openEditPasienModal,
         openModalDelete,
-        handleDeleteUser,
-    } = useUser();
-
-    useEffect(() => {
-        document.title = "Dashboard | Users Management";
-    }, []);
-
-
+        handleDeletePasien,
+    } = usePasien();
     return (
         <>
             <h2 className="intro-y text-lg font-medium pt-24">
-                Users Management
+                Pasien Management
             </h2>
             <div className="grid grid-cols-12 gap-6 mt-5">
                 <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    <button
-                        onClick={openAddUserModal}
+                    {/* <button
+                        onClick={openAddPasienModal}
                         className="btn btn-secondary shadow-md mr-2">
-                        <UserPlus className='pr-1.5' />  Users
-                    </button>
+                        <UserPlus className='pr-1.5' /> Pasien
+                    </button> */}
 
                     <div className="hidden md:block mx-auto text-slate-500"></div>
                     <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
@@ -72,47 +70,77 @@ function UsersList() {
                         <thead>
                             <tr>
                                 <th className="whitespace-nowrap">NAME</th>
-                                <th className="text-center whitespace-nowrap">ROLE</th>
+                                <th className="text-center whitespace-nowrap">USIA</th>
+                                <th className="text-center whitespace-nowrap">GENDER</th>
+                                <th className="text-center whitespace-nowrap">hdDuration</th>
+                                <th className="text-center whitespace-nowrap">education</th>
+                                <th className="text-center whitespace-nowrap">pekerjaan</th>
+                                <th className="text-center whitespace-nowrap">STATUS</th>
                                 <th className="text-center whitespace-nowrap">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan="4" className="py-6">
+                                    <td colSpan="8" className="py-6">
                                         <div className="flex justify-center items-center">
                                             <LoaderCircle className="w-6 h-6 animate-spin text-gray-500" />
                                         </div>
                                     </td>
                                 </tr>
-                            ) : users.length > 0 ? (
-                                [...users]
-                                    .filter((user) =>
-                                        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+                            ) : pasien.length > 0 ? (
+                                [...pasien]
+                                    .filter((pasien) =>
+                                        pasien.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        pasien.email.toLowerCase().includes(searchTerm.toLowerCase())
                                     )
                                     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-                                    .map((user, index) => (
-                                        <motion.tr key={user.id} whileHover={{ scale: 1.02 }}>
+                                    .map((pasien, index) => (
+                                        <motion.tr key={pasien.id} whileHover={{ scale: 1.02 }}>
                                             <td>
-                                                <span className="font-medium whitespace-nowrap">{user.name}</span>
-                                                <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">{user.phone}</div>
+                                                <span className="font-medium whitespace-nowrap">{pasien.name}</span>
+                                                <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">{pasien.phone}</div>
                                             </td>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
-                                                    {user.role_names?.join(', ') || 'No role'}
+                                                    {pasien.usia}
+                                                </div>
+                                            </td>
+                                            <td className="w-40">
+                                                <div className="flex items-center justify-center ">
+                                                    {pasien.gender}
+                                                </div>
+                                            </td>
+                                            <td className="w-40">
+                                                <div className="flex items-center justify-center ">
+                                                    {pasien.hdDuration}
+                                                </div>
+                                            </td>
+                                            <td className="w-40">
+                                                <div className="flex items-center justify-center ">
+                                                    {pasien.education}
+                                                </div>
+                                            </td>
+                                            <td className="w-40">
+                                                <div className="flex items-center justify-center ">
+                                                    {pasien.pekerjaan}
+                                                </div>
+                                            </td>
+                                            <td className="w-40">
+                                                <div className="flex items-center justify-center ">
+                                                    {pasien.maritalStatus}
                                                 </div>
                                             </td>
                                             <td className="table-report__action w-56">
                                                 <div className="flex justify-center items-center">
-                                                    <button
-                                                        onClick={() => openEditUserModal(user)}
+                                                    {/* <button
+                                                        onClick={() => openEditPasienModal(pasien)}
                                                         className="flex items-center mr-3"
                                                     >
                                                         <CheckSquare className="w-4 h-4 mr-1" /> Edit
-                                                    </button>
+                                                    </button> */}
                                                     <button
-                                                        onClick={() => openModalDelete(user)}
+                                                        onClick={() => openModalDelete(pasien)}
                                                         className="flex items-center text-danger"
                                                     >
                                                         <Trash2 className="w-4 h-4 mr-1" /> Delete
@@ -123,7 +151,7 @@ function UsersList() {
                                     ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" className="text-center py-4">Tidak ada data user</td>
+                                    <td colSpan="8" className="text-center py-4">Tidak ada data Pasien</td>
                                 </tr>
                             )}
                         </tbody>
@@ -173,15 +201,15 @@ function UsersList() {
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 title={modalData.title}
-                onSave={handleSaveUser}
+                onSave={handleSavePasien}
             >
-                <InputUsers formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} />
+                <InputPasien formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} />
             </Modal>
 
             <Modaldelete
                 isOpenDelete={isOpenDelete}
                 onClose={() => setIsOpenDelete(false)}
-                onDelete={handleDeleteUser}
+                onDelete={handleDeletePasien}
                 title={modalDataDelete.title}
             >
                 {modalDataDelete.content}
@@ -189,5 +217,3 @@ function UsersList() {
         </>
     )
 }
-
-export default UsersList

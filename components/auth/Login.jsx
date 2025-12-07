@@ -25,7 +25,6 @@ export default function Login({ onNavigateToRegistration, handleLogin }) {
                         <HeartPulse className="w-10 h-10 text-white" />
                     </div>
                     <h1 className="text-teal-700 mb-2">HealthCare Research</h1>
-                    <p className="text-gray-600">Platform Penelitian Hemodialisis</p>
                 </div>
                 {/* Login Form */}
                 <motion.div

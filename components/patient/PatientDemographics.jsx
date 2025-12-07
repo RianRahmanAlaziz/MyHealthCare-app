@@ -154,11 +154,11 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             <SelectValue placeholder="Pilih durasi" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="<6months">Kurang dari 6 bulan</SelectItem>
-                                            <SelectItem value="6-12months">6-12 bulan</SelectItem>
-                                            <SelectItem value="1-2years">1-2 tahun</SelectItem>
-                                            <SelectItem value="2-5years">2-5 tahun</SelectItem>
-                                            <SelectItem value=">5years">Lebih dari 5 tahun</SelectItem>
+                                            <SelectItem value="Kurang dari 6 bulan">Kurang dari 6 bulan</SelectItem>
+                                            <SelectItem value="6-12 bulan">6-12 bulan</SelectItem>
+                                            <SelectItem value="1-2 tahun">1-2 tahun</SelectItem>
+                                            <SelectItem value="1-2 tahun">2-5 tahun</SelectItem>
+                                            <SelectItem value="Lebih dari 5 tahun">Lebih dari 5 tahun</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -180,13 +180,13 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             <SelectValue placeholder="Pilih pendidikan" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="elementary">SD</SelectItem>
-                                            <SelectItem value="junior-high">SMP</SelectItem>
-                                            <SelectItem value="senior-high">SMA/SMK</SelectItem>
-                                            <SelectItem value="diploma">Diploma</SelectItem>
-                                            <SelectItem value="bachelor">S1</SelectItem>
-                                            <SelectItem value="master">S2</SelectItem>
-                                            <SelectItem value="doctoral">S3</SelectItem>
+                                            <SelectItem value="SD">SD</SelectItem>
+                                            <SelectItem value="SMP">SMP</SelectItem>
+                                            <SelectItem value="SMA/SMK">SMA/SMK</SelectItem>
+                                            <SelectItem value="Diploma">Diploma</SelectItem>
+                                            <SelectItem value="S1">S1</SelectItem>
+                                            <SelectItem value="S2">S2</SelectItem>
+                                            <SelectItem value="S3">S3</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -206,13 +206,13 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             <SelectValue placeholder="Pilih pekerjaan" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="unemployed">Tidak Bekerja</SelectItem>
-                                            <SelectItem value="private">Karyawan Swasta</SelectItem>
-                                            <SelectItem value="government">PNS/TNI/POLRI</SelectItem>
-                                            <SelectItem value="entrepreneur">Wiraswasta</SelectItem>
-                                            <SelectItem value="farmer">Petani/Nelayan</SelectItem>
-                                            <SelectItem value="retired">Pensiunan</SelectItem>
-                                            <SelectItem value="other">Lainnya</SelectItem>
+                                            <SelectItem value="Tidak Bekerja">Tidak Bekerja</SelectItem>
+                                            <SelectItem value="Karyawan Swasta">Karyawan Swasta</SelectItem>
+                                            <SelectItem value="PNS/TNI/POLRI">PNS/TNI/POLRI</SelectItem>
+                                            <SelectItem value="Wiraswasta">Wiraswasta</SelectItem>
+                                            <SelectItem value="Petani/Nelayan">Petani/Nelayan</SelectItem>
+                                            <SelectItem value="Pensiunan">Pensiunan</SelectItem>
+                                            <SelectItem value="Lainnya">Lainnya</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -232,10 +232,10 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             <SelectValue placeholder="Pilih status" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="single">Belum Menikah</SelectItem>
-                                            <SelectItem value="married">Menikah</SelectItem>
-                                            <SelectItem value="divorced">Cerai</SelectItem>
-                                            <SelectItem value="widowed">Janda/Duda</SelectItem>
+                                            <SelectItem value="Belum Menikah">Belum Menikah</SelectItem>
+                                            <SelectItem value="Menikah">Menikah</SelectItem>
+                                            <SelectItem value="Cerai">Cerai</SelectItem>
+                                            <SelectItem value="Janda/Duda">Janda/Duda</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
