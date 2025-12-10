@@ -1,67 +1,38 @@
 'use client'
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Image from "next/image";
 import { Music, Wind, Brain, Heart, CheckCircle } from 'lucide-react';
+import * as LucideIcons from "lucide-react";
+import axiosInstance from '@/lib/axiosInstance';
 
 export default function InterventionSelection({ onSelectIntervention }) {
     const [selected, setSelected] = useState(null);
+    const [interventions, setInterventions] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const interventions = [
-        {
-            id: 'music',
-            title: 'Terapi Musik',
-            description: 'Mendengarkan musik relaksasi yang menenangkan untuk mengurangi kecemasan',
-            icon: Music,
-            color: 'from-purple-400 to-pink-500',
-            bgColor: 'bg-purple-50',
-            borderColor: 'border-purple-200',
-            benefits: ['Menurunkan detak jantung', 'Mengurangi stres', 'Meningkatkan mood'],
-            duration: '20-30 menit',
-            image:
-                'https://images.unsplash.com/photo-1741770067276-a10e15ff5197?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-        },
-        {
-            id: 'breathing',
-            title: 'Pernapasan Dalam',
-            description: 'Teknik pernapasan terpandu untuk mencapai ketenangan',
-            icon: Wind,
-            color: 'from-blue-400 to-cyan-500',
-            bgColor: 'bg-blue-50',
-            borderColor: 'border-blue-200',
-            benefits: ['Meningkatkan oksigenasi', 'Menenangkan pikiran', 'Mudah dilakukan'],
-            duration: '15-20 menit',
-            image:
-                'https://images.unsplash.com/photo-1713428856240-100df77350bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-        },
-        {
-            id: 'imagery',
-            title: 'Guided Imagery',
-            description: 'Visualisasi terpandu ke tempat yang tenang dan damai',
-            icon: Brain,
-            color: 'from-teal-400 to-green-500',
-            bgColor: 'bg-teal-50',
-            borderColor: 'border-teal-200',
-            benefits: ['Mengurangi kecemasan', 'Meningkatkan fokus', 'Efek relaksasi mendalam'],
-            duration: '20-25 menit',
-            image:
-                'https://images.unsplash.com/photo-1635545999375-057ee4013deb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-        },
-        {
-            id: 'pmr',
-            title: 'Progressive Muscle Relaxation',
-            description: 'Relaksasi otot bertahap untuk melepaskan ketegangan fisik',
-            icon: Heart,
-            color: 'from-orange-400 to-red-500',
-            bgColor: 'bg-orange-50',
-            borderColor: 'border-orange-200',
-            benefits: ['Mengurangi ketegangan otot', 'Meningkatkan kesadaran tubuh', 'Tidur lebih baik'],
-            duration: '25-30 menit',
-            image:
-                'https://images.unsplash.com/photo-1635545999375-057ee4013deb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-        },
-    ];
+    useEffect(() => {
+        fetchInterventions();
+    }, []);
 
+    const fetchInterventions = async () => {
+        try {
+            const res = await axiosInstance.get("/intervention");
+            setInterventions(res.data.data.data); // karena pagination Laravel
+        } catch (error) {
+            console.error("Gagal memuat intervention:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-gray-500">Memuat data...</p>
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen p-6 pb-32">
             <div className="max-w-4xl mx-auto py-8">
@@ -79,8 +50,13 @@ export default function InterventionSelection({ onSelectIntervention }) {
                 {/* Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     {interventions.map((intervention) => {
-                        const Icon = intervention.icon;
+                        const IconComponent = LucideIcons[intervention.icon];
                         const isSelected = selected === intervention.id;
+                        const benefits = Array.isArray(intervention.benefits)
+                            ? intervention.benefits
+                            : intervention.benefits
+                                ? JSON.parse(intervention.benefits) // kalau aslinya JSON string
+                                : [];
 
                         return (
                             <button
@@ -91,15 +67,15 @@ export default function InterventionSelection({ onSelectIntervention }) {
                             >
                                 <div className="relative h-40 overflow-hidden">
                                     <Image
-                                        src={intervention.image}
-                                        alt={intervention.title}
+                                        src={intervention.image_url}
+                                        alt={intervention.name}
                                         width={500}
                                         height={300}
                                         className="w-full h-full object-cover"
                                     />
 
-                                    <div className={`absolute top-4 right-4 w-10 h-10 rounded-full bg-linear-to-br ${intervention.color} flex items-center justify-center shadow-lg`}>
-                                        <Icon className="w-5 h-5 text-white" />
+                                    <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-lg">
+                                        {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
                                     </div>
 
                                     {isSelected && (
@@ -110,13 +86,13 @@ export default function InterventionSelection({ onSelectIntervention }) {
                                 </div>
 
                                 <div className="p-6 text-left">
-                                    <h3 className="text-gray-900 mb-2">{intervention.title}</h3>
+                                    <h3 className="text-gray-900 mb-2">{intervention.name}</h3>
                                     <p className="text-gray-600 text-sm mb-4">{intervention.description}</p>
 
-                                    <div className={`${intervention.bgColor} rounded-xl p-3 border ${intervention.borderColor} mb-3`}>
+                                    <div className={`bg-teal-50 rounded-xl p-3 border border-teal-200 mb-3`}>
                                         <p className="text-xs text-gray-600 mb-2">Manfaat:</p>
                                         <ul className="space-y-1">
-                                            {intervention.benefits.map((benefit, index) => (
+                                            {benefits.map((benefit, index) => (
                                                 <li key={index} className="flex items-start gap-2 text-xs text-gray-700">
                                                     <span className="text-teal-500 mt-0.5">✓</span>
                                                     <span>{benefit}</span>
@@ -126,7 +102,7 @@ export default function InterventionSelection({ onSelectIntervention }) {
                                     </div>
 
                                     <div className="text-sm text-gray-500">
-                                        Durasi: {intervention.duration}
+                                        Durasi: {Math.ceil(intervention.duration / 60)} menit
                                     </div>
                                 </div>
                             </button>

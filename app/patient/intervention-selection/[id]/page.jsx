@@ -6,6 +6,6 @@ import { useParams } from 'next/navigation'
 export default function InterventionSessionPage() {
     const { id } = useParams();
     return (
-        <InterventionSession intervention={id} />
+        <InterventionSession id={id} />
     )
 }

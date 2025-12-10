@@ -1,73 +1,50 @@
 'use client'
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useMemo } from 'react';
 import Image from "next/image";
 import { Button } from '@/components/ui/button';
 import { Play, Pause, RotateCcw, CheckCircle2, Volume2, Heart } from 'lucide-react';
+import axiosInstance from '@/lib/axiosInstance';
 
-export default function InterventionSession({ intervention }) {
+export default function InterventionSession({ id }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [currentIntervention, setCurrentIntervention] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const interventionData = {
-        music: {
-            title: 'Terapi Musik',
-            duration: 1200,
-            image: 'https://images.unsplash.com/photo-1741770067276-a10e15ff5197?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-            instructions: [
-                'Gunakan headphone untuk pengalaman terbaik',
-                'Duduk atau berbaring dengan nyaman',
-                'Tutup mata Anda dan fokus pada musik',
-                'Biarkan pikiran Anda tenang',
-                'Bernapas perlahan dan dalam',
-            ],
-            color: 'from-purple-400 to-pink-500',
-        },
-        breathing: {
-            title: 'Pernapasan Dalam',
-            duration: 900,
-            image: 'https://images.unsplash.com/photo-1713428856240-100df77350bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-            instructions: [
-                'Duduk dengan posisi tegak dan nyaman',
-                'Letakkan satu tangan di dada, satu di perut',
-                'Tarik napas dalam-dalam melalui hidung (4 detik)',
-                'Tahan napas sebentar (4 detik)',
-                'Hembuskan perlahan melalui mulut (6 detik)',
-                'Ulangi pola pernapasan ini',
-            ],
-            color: 'from-blue-400 to-cyan-500',
-        },
-        imagery: {
-            title: 'Guided Imagery',
-            duration: 1200,
-            image: 'https://images.unsplash.com/photo-1635545999375-057ee4013deb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-            instructions: [
-                'Tutup mata Anda dengan lembut',
-                'Bayangkan tempat yang tenang (pantai, taman, dll)',
-                'Fokus pada detail: warna, suara, aroma',
-                'Rasakan ketenangan dari tempat tersebut',
-                'Bernapas perlahan sambil memvisualisasikan',
-            ],
-            color: 'from-teal-400 to-green-500',
-        },
-        pmr: {
-            title: 'Progressive Muscle Relaxation',
-            duration: 1500,
-            image: 'https://images.unsplash.com/photo-1635545999375-057ee4013deb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-            instructions: [
-                'Berbaring atau duduk dengan nyaman',
-                'Kencangkan otot kaki selama 5 detik, lalu lepaskan',
-                'Lanjutkan ke otot betis, paha, perut',
-                'Kencangkan dan lepaskan setiap kelompok otot',
-                'Rasakan perbedaan antara tegang dan rileks',
-            ],
-            color: 'from-orange-400 to-red-500',
-        },
-    };
+    // === AMBIL DATA INTERVENTION ===
+    useEffect(() => {
+        if (!id) return;
+        setLoading(true);
+        axiosInstance.get(`/intervention/${id}`)
+            .then(res => {
+                const data = res.data.data;
 
-    const currentIntervention = interventionData[intervention] || interventionData.music;
+                setCurrentIntervention({
+                    ...data,
+                    benefits: JSON.parse(data.benefits),
+                    instructions: JSON.parse(data.instructions)
+                });
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+                setLoading(false); // ⬅ agar tidak loading terus saat error
+            });
+
+    }, [id]);
 
     useEffect(() => {
+        if (currentIntervention) {
+            document.title = `HealthCare Research | ${currentIntervention.name}`;
+        }
+    }, [currentIntervention]);
+
+    // === TIMER ===
+    useEffect(() => {
+        if (!currentIntervention) return;
+
         let interval;
         if (isPlaying && !isCompleted) {
             interval = setInterval(() => {
@@ -81,14 +58,32 @@ export default function InterventionSession({ intervention }) {
                 });
             }, 1000);
         }
+
         return () => clearInterval(interval);
-    }, [isPlaying, isCompleted, currentIntervention.duration]);
+    }, [isPlaying, isCompleted, currentIntervention]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
+
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-gray-500">Memuat data sesi...</p>
+            </div>
+        );
+    }
+
+    if (!currentIntervention) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-red-500">Intervention tidak ditemukan.</p>
+            </div>
+        );
+    }
 
     const progress = (timeElapsed / currentIntervention.duration) * 100;
 
@@ -107,7 +102,7 @@ export default function InterventionSession({ intervention }) {
             <div className="max-w-2xl mx-auto py-8">
 
                 <div className="text-center mb-8">
-                    <h1 className="text-teal-700 mb-2">{currentIntervention.title}</h1>
+                    <h1 className="text-teal-700 mb-2">{currentIntervention.name}</h1>
                     <p className="text-gray-600">Sesi Relaksasi Terpandu</p>
                 </div>
 
@@ -115,8 +110,8 @@ export default function InterventionSession({ intervention }) {
 
                     <div className="relative h-64 bg-linear-to-br from-gray-900 to-gray-800">
                         <Image
-                            src={currentIntervention.image}
-                            alt={currentIntervention.title}
+                            src={currentIntervention.image_url}
+                            alt={currentIntervention.name}
                             fill
                             className="object-cover opacity-60"
                             sizes="100vw"
@@ -124,7 +119,7 @@ export default function InterventionSession({ intervention }) {
                         />
 
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <div className={`w-20 h-20 rounded-full bg-linear-to-br ${currentIntervention.color} flex items-center justify-center shadow-2xl`}>
+                            <div className={`w-20 h-20 rounded-full bg-linear-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-2xl`}>
                                 {isCompleted ? (
                                     <CheckCircle2 className="w-10 h-10 text-white" />
                                 ) : (
@@ -149,7 +144,7 @@ export default function InterventionSession({ intervention }) {
                             </div>
                             <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
                                 <div
-                                    className={`h-full bg-linear-to-r ${currentIntervention.color} transition-all duration-300`}
+                                    className={`h-full bg-linear-to-r from-blue-400 to-cyan-500 transition-all duration-300`}
                                     style={{ width: `${progress}%` }}
                                 />
                             </div>
@@ -159,7 +154,7 @@ export default function InterventionSession({ intervention }) {
                             <div className="flex gap-4 mb-6">
                                 <Button
                                     onClick={handlePlayPause}
-                                    className={`flex-1 h-14 rounded-xl text-white shadow-lg bg-linear-to-r ${currentIntervention.color}`}
+                                    className="flex-1 h-14 cursor-pointer rounded-xl text-white shadow-lg bg-linear-to-r from-blue-400 to-cyan-500"
                                 >
                                     {isPlaying ? (
                                         <>
@@ -176,7 +171,7 @@ export default function InterventionSession({ intervention }) {
                                     <Button
                                         onClick={handleReset}
                                         variant="outline"
-                                        className="h-14 rounded-xl border-2 border-gray-300"
+                                        className="h-14 cursor-pointer rounded-xl border-2 border-gray-300"
                                     >
                                         <RotateCcw className="w-5 h-5" />
                                     </Button>
