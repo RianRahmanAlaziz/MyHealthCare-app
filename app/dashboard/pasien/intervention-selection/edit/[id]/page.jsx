@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useParams } from 'next/navigation'
-import EditIntervention from '@/components/cms/pages/pasient/intervention/EditIntervention';
+import EditIntervention from '@/components/cms/pages/patient/intervention/EditIntervention';
 
 export default function EditInterventionPage() {
     const { id } = useParams();

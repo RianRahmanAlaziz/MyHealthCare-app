@@ -45,58 +45,6 @@ export default function ZungExplanation({ onNavigateToEducation }) {
                         </ul>
                     </div>
 
-                    <h3 className="text-gray-900 mb-4">Tingkat Kecemasan</h3>
-                    <p className="text-gray-700 mb-4">
-                        Hasil dari skala ini akan menunjukkan tingkat kecemasan Anda:
-                    </p>
-
-                    <div className="space-y-3">
-
-                        {/* Normal */}
-                        <div className="flex items-center gap-4 p-4 bg-green-50 rounded-xl border border-green-200">
-                            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                                <Smile className="w-6 h-6 text-green-600" />
-                            </div>
-                            <div>
-                                <h4 className="text-green-900">Normal (20-44)</h4>
-                                <p className="text-green-700 text-sm">Tingkat kecemasan normal</p>
-                            </div>
-                        </div>
-
-                        {/* Ringan */}
-                        <div className="flex items-center gap-4 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-                            <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
-                                <Meh className="w-6 h-6 text-yellow-600" />
-                            </div>
-                            <div>
-                                <h4 className="text-yellow-900">Ringan (45-59)</h4>
-                                <p className="text-yellow-700 text-sm">Dapat diatasi dengan relaksasi</p>
-                            </div>
-                        </div>
-
-                        {/* Sedang */}
-                        <div className="flex items-center gap-4 p-4 bg-orange-50 rounded-xl border border-orange-200">
-                            <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
-                                <Frown className="w-6 h-6 text-orange-600" />
-                            </div>
-                            <div>
-                                <h4 className="text-orange-900">Sedang (60-74)</h4>
-                                <p className="text-orange-700 text-sm">Perlu intervensi lebih intensif</p>
-                            </div>
-                        </div>
-
-                        {/* Berat */}
-                        <div className="flex items-center gap-4 p-4 bg-red-50 rounded-xl border border-red-200">
-                            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                                <AlertCircle className="w-6 h-6 text-red-600" />
-                            </div>
-                            <div>
-                                <h4 className="text-red-900">Berat (75-80)</h4>
-                                <p className="text-red-700 text-sm">Disarankan konsultasi dengan profesional</p>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
 
                 {/* Info Cara Mengisi */}

@@ -9,9 +9,11 @@ export default function InterventionSelectionPage() {
         document.title = "Teknik Relaksasi | HealthCare Research";
 
     }, []);
-    const onSelectIntervention = (selected) => {
-        router.push(`/patient/intervention-selection/${selected}`);
+
+    const onSelectIntervention = ({ id, slug }) => {
+        router.push(`/patient/intervention-selection/${slug}?id=${id}`);
     };
+
     return (
         <InterventionSelection onSelectIntervention={onSelectIntervention} />
     )

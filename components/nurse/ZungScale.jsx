@@ -1,10 +1,11 @@
 'use client';
 
+import { motion } from 'motion/react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Heart, ArrowRight } from 'lucide-react';
+import { Heart, ArrowRight, Brain } from 'lucide-react';
 
 export default function ZungScale({ onNavigateToEducation }) {
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -64,12 +65,14 @@ export default function ZungScale({ onNavigateToEducation }) {
 
     return (
         <div className="min-h-screen p-6">
-            <div className="max-w-2xl mx-auto py-8">
-
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-2xl mx-auto py-8">
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-blue-400 to-blue-600 mb-4 shadow-lg">
-                        <Heart className="w-8 h-8 text-white" />
+                        <Brain className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-blue-700 mb-2">Skala Kecemasan Zung (SAS)</h1>
                     <p className="text-gray-600">Self-Rating Anxiety Scale</p>
@@ -90,7 +93,11 @@ export default function ZungScale({ onNavigateToEducation }) {
                 </div>
 
                 {/* Question */}
-                <div className="bg-white rounded-3xl shadow-xl p-8 mb-6">
+                <motion.div
+                    key={currentQuestion}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="bg-white rounded-3xl shadow-xl p-8 mb-6">
                     <div className="mb-6">
                         <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-700 mb-4">
                             <span>{currentQuestion + 1}</span>
@@ -107,8 +114,11 @@ export default function ZungScale({ onNavigateToEducation }) {
                         className="space-y-3"
                     >
                         {scale.map((option) => (
-                            <div
+                            <motion.div
                                 key={option.value}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: option.value * 0.05 }}
                                 className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all cursor-pointer hover:bg-gray-50 ${answers[currentQuestion] === option.value
                                     ? 'border-blue-500 bg-blue-50'
                                     : 'border-gray-200'
@@ -124,13 +134,12 @@ export default function ZungScale({ onNavigateToEducation }) {
                                 >
                                     <div className="flex items-center justify-between">
                                         <span>{option.label}</span>
-                                        <span className="text-sm text-gray-500">({option.value})</span>
                                     </div>
                                 </Label>
-                            </div>
+                            </motion.div >
                         ))}
                     </RadioGroup>
-                </div>
+                </motion.div>
 
                 {/* Navigation */}
                 <div className="flex gap-4">
@@ -161,7 +170,7 @@ export default function ZungScale({ onNavigateToEducation }) {
                         Jawablah dengan jujur sesuai dengan perasaan Anda.
                     </p>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }

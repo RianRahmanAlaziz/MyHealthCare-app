@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowRight, User } from 'lucide-react';
 import axiosInstance from "@/lib/axiosInstance";
-
+import { toast } from 'react-toastify' // ✅ Tambahkan ini
 
 export default function PatientDemographics({ onNavigateToZungExplanation }) {
     const [step, setStep] = useState(1);
@@ -157,7 +157,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                             <SelectItem value="Kurang dari 6 bulan">Kurang dari 6 bulan</SelectItem>
                                             <SelectItem value="6-12 bulan">6-12 bulan</SelectItem>
                                             <SelectItem value="1-2 tahun">1-2 tahun</SelectItem>
-                                            <SelectItem value="1-2 tahun">2-5 tahun</SelectItem>
+                                            <SelectItem value="2-5 tahun">2-5 tahun</SelectItem>
                                             <SelectItem value="Lebih dari 5 tahun">Lebih dari 5 tahun</SelectItem>
                                         </SelectContent>
                                     </Select>

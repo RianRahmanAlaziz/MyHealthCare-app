@@ -6,12 +6,11 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import useIntervention from '@/components/cms/hooks/patient/useIntervention';
 
-export default function EditIntervention({ id }) {
+export default function InputIntervention() {
     const [preview, setPreview] = useState(null)
     const [file, setFile] = useState(null)
     const inputRef = useRef(null)
     const {
-        loading,
         selectedInstructions,
         setSelectedInstructions,
         selectedDuration,
@@ -26,22 +25,12 @@ export default function EditIntervention({ id }) {
         setFormData,
         errors,
         setErrors,
-        handleUpdateIntervention
-    } = useIntervention(id);
+        handleSaveIntervention,
+    } = useIntervention();
 
     useEffect(() => {
-        document.title = "Dashboard | Edit Intervention";
+        document.title = "Dashboard | Add Intervention";
     }, []);
-
-
-    if (loading || !formData) {
-        return (
-            <div className="p-10 text-center">
-                <div className="animate-spin h-6 w-6 border-4 border-primary rounded-full border-t-transparent mx-auto mb-3"></div>
-                Loading data...
-            </div>
-        );
-    }
 
     function handleImageChange(e) {
         const selectedFile = e.target.files[0]
@@ -52,17 +41,12 @@ export default function EditIntervention({ id }) {
         setPreview(previewUrl)
     }
 
-
-    const removePreview = () => {
-        setPreview(null);
-
-        setFormData(prev => ({
-            ...prev,
-            image: null,
-            image_url: null
-        }));
-    };
-
+    function removePreview() {
+        if (preview) URL.revokeObjectURL(preview)
+        setPreview(null)
+        setFile(null)
+        if (inputRef.current) inputRef.current.value = ''
+    }
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -109,7 +93,7 @@ export default function EditIntervention({ id }) {
                         <div className="col-span-12 mt-8">
                             <div className="intro-y flex items-center h-10">
                                 <h2 className="text-lg font-medium truncate mr-5">
-                                    Edit Intervention
+                                    Tambah Intervention
                                 </h2>
                             </div>
                             <div className="intro-y box p-5 mt-5">
@@ -362,17 +346,18 @@ export default function EditIntervention({ id }) {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="flex justify-center flex-col md:flex-row gap-2 mt-5">
-                                <a href="/dashboard/info"
+                                <a href="/dashboard/pasien/intervention-selection"
                                     className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52">
                                     Cancel
                                 </a>
                                 <button
                                     type="button"
-                                    onClick={() => handleUpdateIntervention(file)}
+                                    onClick={() => handleSaveIntervention(file)}
                                     className="btn py-3 btn-primary w-full md:w-52"
                                 >
-                                    Update
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -399,32 +384,6 @@ export default function EditIntervention({ id }) {
                                                                 className="rounded-md"
                                                                 alt="Preview Image"
                                                                 src={preview} />
-                                                            <div
-                                                                title="Remove this image?"
-                                                                className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2" onClick={removePreview}>
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    className="w-4 h-4 cursor-pointer"
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="none"
-                                                                    stroke="currentColor"
-                                                                    strokeWidth="2"
-                                                                    strokeLinecap="round"
-                                                                    strokeLinejoin="round"
-                                                                >
-                                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                                                </svg>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                    {!preview && formData?.image_url && (
-                                                        <div className="w-24 h-24 relative image-fit mb-5 mr-5 cursor-pointer zoom-in">
-                                                            <img
-                                                                className="rounded-md"
-                                                                alt="Preview Image"
-                                                                src={formData.image_url}
-                                                            />
                                                             <div
                                                                 title="Remove this image?"
                                                                 className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2" onClick={removePreview}>

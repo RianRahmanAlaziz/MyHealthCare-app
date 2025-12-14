@@ -14,7 +14,7 @@ export default function RoleSelectionPage() {
 
     const onSelectRole = async (roles) => {
         try {
-            const token = sessionStorage.getItem('token');
+            const token = localStorage.getItem('token');
 
             if (!token) {
                 toast.error('Silakan login ulang');
@@ -37,7 +37,7 @@ export default function RoleSelectionPage() {
                 toast.error(data.message || 'Gagal mengubah role');
                 return;
             }
-            sessionStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("user", JSON.stringify(data.user));
             toast.success('Role berhasil dipilih');
 
             // ✅ Redirect sesuai role

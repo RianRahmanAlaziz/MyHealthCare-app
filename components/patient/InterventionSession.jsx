@@ -2,17 +2,21 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Image from "next/image";
+import { toast } from 'react-toastify' // ✅ Tambahkan ini
 import { Button } from '@/components/ui/button';
-import { Play, Pause, RotateCcw, CheckCircle2, Volume2, Heart } from 'lucide-react';
+import { Play, Pause, RotateCcw, CheckCircle2, Volume2, Heart, ArrowLeft } from 'lucide-react';
+import { useSearchParams, useRouter } from "next/navigation";
 import axiosInstance from '@/lib/axiosInstance';
 
-export default function InterventionSession({ id }) {
+export default function InterventionSession({ params, onNavigateToSelection }) {
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id"); // ← ID diambil di sini
     const [isPlaying, setIsPlaying] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isCompleted, setIsCompleted] = useState(false);
     const [currentIntervention, setCurrentIntervention] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const router = useRouter();
     // === AMBIL DATA INTERVENTION ===
     useEffect(() => {
         if (!id) return;
@@ -62,13 +66,24 @@ export default function InterventionSession({ id }) {
         return () => clearInterval(interval);
     }, [isPlaying, isCompleted, currentIntervention]);
 
+    useEffect(() => {
+        if (isCompleted && currentIntervention && id) {
+            axiosInstance.post("/intervention/session-complete", {
+                intervention_id: id,
+            })
+                .then(() => {
+                    toast.success('Selamat Telah Menyelesaikan Sesi!');
+                    router.push("/patient/intervention-selection");
+                })
+                .catch(err => console.error("Save failed:", err));
+        }
+    }, [isCompleted, currentIntervention, id]);
+
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
-
-
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -100,6 +115,13 @@ export default function InterventionSession({ id }) {
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-2xl mx-auto py-8">
+                <button
+                    onClick={onNavigateToSelection}
+                    className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors cursor-pointer"
+                >
+                    <ArrowLeft className="w-5 h-5 mr-2" />
+                    Kembali
+                </button>
 
                 <div className="text-center mb-8">
                     <h1 className="text-teal-700 mb-2">{currentIntervention.name}</h1>
@@ -107,7 +129,6 @@ export default function InterventionSession({ id }) {
                 </div>
 
                 <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-6">
-
                     <div className="relative h-64 bg-linear-to-br from-gray-900 to-gray-800">
                         <Image
                             src={currentIntervention.image_url}

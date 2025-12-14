@@ -1,5 +1,7 @@
+'use client'
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { motion } from 'motion/react';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ClipboardCheck, ArrowRight } from 'lucide-react';
@@ -120,8 +122,8 @@ export default function PreTestQuestionnaire({ onNavigateToSession }) {
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
                         <ClipboardCheck className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-teal-700 mb-2">Kuesioner Pengetahuan</h1>
-                    <p className="text-gray-600">Pre-Test: Uji pemahaman Anda</p>
+                    <h1 className="text-teal-700 mb-2">Kuesioner </h1>
+                    <p className="text-gray-600">Zung Self- Rating Anxietas Score (SAS) </p>
                 </div>
 
                 {/* Progress */}
@@ -156,20 +158,29 @@ export default function PreTestQuestionnaire({ onNavigateToSession }) {
                             className="space-y-4"
                         >
                             {questions[currentQuestion].options.map((option, index) => (
-                                <div key={index} className="flex items-start space-x-3">
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                    className={`flex items-start space-x-3 p-4 rounded-xl border-2 transition-all cursor-pointer ${answers[currentQuestion.id] === index
+                                        ? 'border-blue-400 bg-blue-50'
+                                        : 'border-blue-100 hover:border-blue-200 hover:bg-blue-50/50'
+                                        }`}
+                                >
                                     <RadioGroupItem
                                         value={option}
                                         id={`q${currentQuestion}-${index}`}
-                                        className="mt-1"
+                                        className="mt-0.5"
                                     />
 
                                     <Label
                                         htmlFor={`q${currentQuestion}-${index}`}
-                                        className="flex-1 cursor-pointer text-gray-700 p-4 rounded-xl hover:bg-gray-50 transition-colors"
+                                        className="flex-1 cursor-pointer text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                                     >
                                         {option}
                                     </Label>
-                                </div>
+                                </motion.div>
                             ))}
                         </RadioGroup>
                     </div>

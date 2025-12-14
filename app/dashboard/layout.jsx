@@ -14,8 +14,8 @@ import Menumobile from "@/components/cms/layouts/Menumobile";
 export default function DashboardLayout({ children }) {
     const router = useRouter();
     useEffect(() => {
-        // ✅ Ambil token dari localStorage atau sessionStorage
-        const token = sessionStorage.getItem('token');
+        // ✅ Ambil token dari localStorage 
+        const token = localStorage.getItem('token');
 
         if (!token) {
             toast.error('Silakan login terlebih dahulu!');
@@ -37,11 +37,11 @@ export default function DashboardLayout({ children }) {
                 if (res.ok) {
                     const data = await res.json();
 
-                    sessionStorage.setItem('token', data.access_token);
+                    localStorage.setItem('token', data.access_token);
 
                     toast.success('Token berhasil diperbarui 🔄');
                 } else {
-                    sessionStorage.removeItem('token');
+                    localStorage.removeItem('token');
                     toast.error('Sesi habis, silakan login ulang.');
 
                     window.location.href = "/auth/login";
@@ -49,7 +49,7 @@ export default function DashboardLayout({ children }) {
             } catch (error) {
                 console.error('Error refresh token:', error);
                 toast.error('Gagal memperbarui token.');
-                sessionStorage.removeItem('token');
+                localStorage.removeItem('token');
                 window.location.href = "/auth/login";
             }
         };

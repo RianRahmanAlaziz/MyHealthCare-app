@@ -21,6 +21,7 @@ export default function Registration({ onNavigateToLogin }) {
     const isPasswordMatch =
         formData.confirmPassword.length > 0 &&
         formData.password === formData.confirmPassword;
+
     const handleRegister = async () => {
         if (formData.password !== formData.confirmPassword) {
             setErrorMsg("Password dan konfirmasi tidak sama");
@@ -30,7 +31,7 @@ export default function Registration({ onNavigateToLogin }) {
         setLoading(true);
 
         try {
-            const res = await axios.post("http://127.0.0.1:8000/api/auth/register", {
+            const res = await axiosInstance.post("/auth/register", {
                 name: formData.name,
                 phone: formData.phone,
                 password: formData.password,

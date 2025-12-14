@@ -17,9 +17,9 @@ export default function NurseEducationModule() {
         Modul ini dirancang untuk meningkatkan pemahaman Anda tentang manajemen kecemasan 
         pada pasien hemodialisis dan berbagai teknik relaksasi yang dapat diterapkan.
 
-        Sebagai perawat, Anda memiliki peran penting dalam membantu pasien mengatasi 
-        kecemasan selama sesi dialisis. Penelitian menunjukkan bahwa kecemasan dapat 
-        mempengaruhi hasil pengobatan dan kualitas hidup pasien.
+            Sebagai perawat, Anda memiliki peran penting dalam membantu pasien mengatasi 
+            kecemasan selama sesi dialisis. Penelitian menunjukkan bahwa kecemasan dapat 
+            mempengaruhi hasil pengobatan dan kualitas hidup pasien.
 
         Melalui modul ini, Anda akan mempelajari:
         • Patofisiologi kecemasan pada pasien HD
@@ -118,44 +118,54 @@ export default function NurseEducationModule() {
             id: 'imagery',
             title: 'Guided Imagery',
             icon: Video,
-            content: `
-        Konsep Dasar:
-        Guided imagery adalah teknik visualisasi terpandu.
+            content: `<h3>Konsep Dasar</h3>
+                        <p>
+                            Guided imagery adalah teknik visualisasi terpandu.
+                        </p>
 
-        Script Contoh:
+                        <h3>Script Contoh</h3>
+                        <blockquote>
+                            <p>
+                                "Bayangkan Anda berada di pantai yang tenang...<br />
+                                Rasakan pasir hangat...<br />
+                                Dengar ombak lembut..."
+                            </p>
+                        </blockquote>
 
-        "Bayangkan Anda berada di pantai yang tenang...
-        Rasakan pasir hangat...
-        Dengar ombak lembut..."
-
-        Tips Implementasi:
-        • Gunakan suara lembut
-        • Beri jeda antar kalimat
-        • Durasi 15-20 menit
-      `,
+                        <h3>Tips Implementasi</h3>
+                        <ul>
+                            <li>Gunakan suara lembut</li>
+                            <li>Beri jeda antar kalimat</li>
+                            <li>Durasi 15–20 menit</li>
+                        </ul>`,
         },
         {
             id: 'pmr',
             title: 'Progressive Muscle Relaxation',
             icon: Video,
-            content: `
-        Prinsip Dasar:
-        PMR menegangkan & merilekskan otot secara sistematis.
+            content: `<h3>Prinsip Dasar</h3>
+                    <p>
+                        PMR (Progressive Muscle Relaxation) menegangkan dan merilekskan otot secara sistematis.
+                    </p>
+                    <h3>Manfaat</h3>
+                    <ul>
+                        <li>Mengurangi ketegangan otot</li>
+                        <li>Menurunkan kecemasan</li>
+                    </ul>
 
-        Manfaat:
-        • Mengurangi ketegangan otot
-        • Menurunkan kecemasan
+                    <h3>Protokol 10 Kelompok Otot</h3>
+                    <ol>
+                        <li>Tangan kanan</li>
+                        <li>Tangan kiri</li>
+                        <li>Lengan atas kanan</li>
+                        <li>Dan seterusnya hingga 10 kelompok otot</li>
+                    </ol>
 
-        Protokol 10 Kelompok Otot:
-        1. Tangan kanan
-        2. Tangan kiri
-        3. Lengan atas kanan
-        ...
-
-        Modifikasi untuk Pasien HD:
-        • Fokus otot jauh dari fistula
-        • Hindari gerakan ekstrem
-      `,
+                    <h3>Modifikasi untuk Pasien Hemodialisis (HD)</h3>
+                    <ul>
+                        <li>Fokus pada otot yang jauh dari fistula</li>
+                        <li>Hindari gerakan ekstrem</li>
+                    </ul>`,
         },
         {
             id: 'evaluation',

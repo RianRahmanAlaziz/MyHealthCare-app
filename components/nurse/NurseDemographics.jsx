@@ -1,16 +1,19 @@
-'use client'
+"use client";
+
 import { useState } from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { ArrowRight, Stethoscope } from 'lucide-react';
+import axiosInstance from "@/lib/axiosInstance";
+import { toast } from 'react-toastify' // ✅ Tambahkan ini
 
 export default function NurseDemographics({ onNavigateToZungScale }) {
     const [formData, setFormData] = useState({
         name: '',
-        nira: '',
-        age: '',
+        nip: '',
+        usia: '',
         gender: '',
         workDuration: '',
         education: '',
@@ -18,9 +21,31 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
         shift: '',
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onNavigateToZungScale();
+
+        try {
+            const res = await axiosInstance.post("/perawat", {
+                name: formData.name,
+                nip: formData.nip,
+                usia: formData.usia,
+                gender: formData.gender,
+                workDuration: formData.workDuration,
+                education: formData.education,
+                unit: formData.unit,
+                shift: formData.shift,
+            });
+
+            if (res.data.success) {
+                // ✅ BERHASIL SIMPAN 
+                onNavigateToZungScale();
+            }
+
+        } catch (error) {
+            console.error("Gagal menyimpan:", error.response?.data || error);
+            toast.error(error.response?.data?.message || "Gagal menyimpan data");
+        }
+
     };
 
     return (
@@ -45,6 +70,7 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                                 </Label>
                                 <Input
                                     id="name"
+                                    name="name"
                                     type="text"
                                     placeholder="Nama lengkap Anda"
                                     value={formData.name}
@@ -55,15 +81,16 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="nira" className="text-gray-700">
-                                    NIRA / NIP <span className="text-red-500">*</span>
+                                <Label htmlFor="nip" className="text-gray-700">
+                                    NIP <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
-                                    id="nira"
+                                    id="nip"
+                                    name="nip"
                                     type="text"
                                     placeholder="Nomor Induk Registrasi"
-                                    value={formData.nira}
-                                    onChange={(e) => setFormData({ ...formData, nira: e.target.value })}
+                                    value={formData.nip}
+                                    onChange={(e) => setFormData({ ...formData, nip: e.target.value })}
                                     className="h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400"
                                     required
                                 />
@@ -72,15 +99,16 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <Label htmlFor="age" className="text-gray-700">
+                                <Label htmlFor="usia" className="text-gray-700">
                                     Usia <span className="text-red-500">*</span>
                                 </Label>
                                 <Input
-                                    id="age"
+                                    id="usia"
+                                    name="usia"
                                     type="number"
                                     placeholder="Contoh: 30"
-                                    value={formData.age}
-                                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                                    value={formData.usia}
+                                    onChange={(e) => setFormData({ ...formData, usia: e.target.value })}
                                     className="h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400"
                                     min="20"
                                     max="70"
@@ -101,8 +129,8 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                                         <SelectValue placeholder="Pilih jenis kelamin" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="male">Laki-laki</SelectItem>
-                                        <SelectItem value="female">Perempuan</SelectItem>
+                                        <SelectItem value="Laki-laki">Laki-laki</SelectItem>
+                                        <SelectItem value="Perempuan">Perempuan</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -121,11 +149,11 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                                     <SelectValue placeholder="Pilih durasi" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="<1year">Kurang dari 1 tahun</SelectItem>
-                                    <SelectItem value="1-3years">1-3 tahun</SelectItem>
-                                    <SelectItem value="3-5years">3-5 tahun</SelectItem>
-                                    <SelectItem value="5-10years">5-10 tahun</SelectItem>
-                                    <SelectItem value=">10years">Lebih dari 10 tahun</SelectItem>
+                                    <SelectItem value="Kurang dari 1 Tahun">Kurang dari 1 tahun</SelectItem>
+                                    <SelectItem value="1-3 Tahun">1-3 tahun</SelectItem>
+                                    <SelectItem value="3-5 Tahun">3-5 tahun</SelectItem>
+                                    <SelectItem value="5-10 Tahun">5-10 tahun</SelectItem>
+                                    <SelectItem value="Lebih dari 10 Tahun">Lebih dari 10 tahun</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -143,11 +171,11 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                                     <SelectValue placeholder="Pilih pendidikan" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="d3">D3 Keperawatan</SelectItem>
-                                    <SelectItem value="s1">S1 Keperawatan (Ners)</SelectItem>
-                                    <SelectItem value="s2">S2 Keperawatan</SelectItem>
-                                    <SelectItem value="s3">S3 Keperawatan</SelectItem>
-                                    <SelectItem value="specialist">Spesialis Keperawatan</SelectItem>
+                                    <SelectItem value="D3 Keperawatan">D3 Keperawatan</SelectItem>
+                                    <SelectItem value="S1 Keperawatan">S1 Keperawatan (Ners)</SelectItem>
+                                    <SelectItem value="S2 Keperawatan">S2 Keperawatan</SelectItem>
+                                    <SelectItem value="S3 Keperawatan">S3 Keperawatan</SelectItem>
+                                    <SelectItem value="Spesialis Keperawatan">Spesialis Keperawatan</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -158,6 +186,7 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                             </Label>
                             <Input
                                 id="unit"
+                                name="unit"
                                 type="text"
                                 placeholder="Contoh: Unit Hemodialisis RS Harapan"
                                 value={formData.unit}
@@ -180,10 +209,10 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                                     <SelectValue placeholder="Pilih shift" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="morning">Pagi (07:00 - 14:00)</SelectItem>
-                                    <SelectItem value="afternoon">Siang (14:00 - 21:00)</SelectItem>
-                                    <SelectItem value="night">Malam (21:00 - 07:00)</SelectItem>
-                                    <SelectItem value="rotating">Shift Bergantian</SelectItem>
+                                    <SelectItem value="Pagi">Pagi (07:00 - 14:00)</SelectItem>
+                                    <SelectItem value="Siang">Siang (14:00 - 21:00)</SelectItem>
+                                    <SelectItem value="Malam">Malam (21:00 - 07:00)</SelectItem>
+                                    <SelectItem value="Shift Bergantian">Shift Bergantian</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

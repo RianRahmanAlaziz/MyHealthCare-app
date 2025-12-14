@@ -12,6 +12,12 @@ export default function usePasien() {
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         name: "",
+        usia: "",
+        gender: "",
+        hdDuration: "",
+        education: "",
+        pekerjaan: "",
+        maritalStatus: "",
     });
     const [pagination, setPagination] = useState({
         current_page: 1,
@@ -74,7 +80,15 @@ export default function usePasien() {
 
             await fetchPasien();
             setIsOpen(false);
-            setFormData({ name: '' });
+            setFormData({
+                name: '',
+                usia: '',
+                gender: '',
+                hdDuration: '',
+                education: '',
+                pekerjaan: '',
+                maritalStatus: ''
+            });
             setErrors({});
             // ✅ Toast notifikasi sukses
             if (mode === 'edit') {

@@ -10,10 +10,22 @@ export default function InterventionSelection({ onSelectIntervention }) {
     const [selected, setSelected] = useState(null);
     const [interventions, setInterventions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [completed, setCompleted] = useState([]);
+
 
     useEffect(() => {
         fetchInterventions();
+        fetchCompleted();
     }, []);
+
+    const fetchCompleted = async () => {
+        try {
+            const res = await axiosInstance.get("/intervention/completed");
+            setCompleted(res.data.data); // array berisi id intervention yang sudah selesai
+        } catch (err) {
+            console.error("Gagal memuat completed:", err);
+        }
+    };
 
     const fetchInterventions = async () => {
         try {
@@ -50,8 +62,9 @@ export default function InterventionSelection({ onSelectIntervention }) {
                 {/* Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     {interventions.map((intervention) => {
+                        const isCompleted = completed.includes(intervention.id);
                         const IconComponent = LucideIcons[intervention.icon];
-                        const isSelected = selected === intervention.id;
+                        const isSelected = selected?.id === intervention.id;
                         const benefits = Array.isArray(intervention.benefits)
                             ? intervention.benefits
                             : intervention.benefits
@@ -61,10 +74,12 @@ export default function InterventionSelection({ onSelectIntervention }) {
                         return (
                             <button
                                 key={intervention.id}
-                                onClick={() => setSelected(intervention.id)}
-                                className={`bg-white cursor-pointer rounded-3xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${isSelected ? 'ring-4 ring-teal-400' : ''
-                                    }`}
-                            >
+                                onClick={() => setSelected({
+                                    id: intervention.id,
+                                    slug: intervention.slug
+                                })}
+                                disabled={isCompleted}
+                                className={` bg-white cursor-pointer rounded-3xl shadow-lg overflow-hidden transition-all  ${isCompleted ? 'opacity-50 cursor-not-allowed' : ''} `} >
                                 <div className="relative h-40 overflow-hidden">
                                     <Image
                                         src={intervention.image_url}
@@ -83,6 +98,12 @@ export default function InterventionSelection({ onSelectIntervention }) {
                                             <CheckCircle className="w-6 h-6 text-teal-500" />
                                         </div>
                                     )}
+                                    {isCompleted && (
+                                        <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
+                                            <CheckCircle className="w-6 h-6 text-white" />
+                                        </div>
+                                    )}
+
                                 </div>
 
                                 <div className="p-6 text-left">
@@ -125,7 +146,10 @@ export default function InterventionSelection({ onSelectIntervention }) {
                 <div className="fixed bottom-0 left-0 right-0 p-6 bg-linear-to-t from-white via-white to-transparent">
                     <div className="max-w-4xl mx-auto">
                         <Button
-                            onClick={() => selected && onSelectIntervention(selected)}
+                            onClick={() =>
+                                selected &&
+                                onSelectIntervention({ id: selected.id, slug: selected.slug })
+                            }
                             disabled={!selected}
                             className="w-full h-14 cursor-pointer rounded-xl bg-linear-to-r from-teal-500 to-blue-500 text-white shadow-lg disabled:opacity-50"
                         >

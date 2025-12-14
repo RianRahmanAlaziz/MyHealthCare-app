@@ -136,7 +136,7 @@ export default function Intervention() {
                                     </div>
 
                                     <div className="font-medium text-base mt-5">
-                                        {intervention.slug}
+                                        {intervention.name}
                                     </div>
 
                                     <div className="text-slate-600 mt-2">

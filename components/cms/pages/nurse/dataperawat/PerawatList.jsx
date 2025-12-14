@@ -1,23 +1,19 @@
 'use client';
-
-import { CheckSquare, Trash2, ChevronLeft, ChevronsLeft, ChevronRight, ChevronsRight, UserPlus, LoaderCircle } from 'lucide-react'
 import { useEffect } from 'react'
-import Modal from '@/components/cms/common/Modal';
 import { motion } from "framer-motion";
+import { Trash2, ChevronLeft, ChevronsLeft, ChevronRight, ChevronsRight, LoaderCircle } from 'lucide-react'
 import Modaldelete from '@/components/cms/common/Modaldelete';
-import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
-import usePasien from '../../../hooks/master-data/usePasien';
-import InputPasien from './InputPasien';
+import usePerawat from '../../../hooks/nurse/usePerawat';
 
-export default function PasientList() {
+function PerawatList() {
     useEffect(() => {
-        document.title = "Dashboard | Pasien Management";
+        document.title = "Dashboard | Perawat Management";
     }, []);
 
     const {
         isOpen,
         isOpenDelete,
-        pasien,
+        perawat,
         loading,
         searchTerm,
         setSearchTerm,
@@ -31,16 +27,16 @@ export default function PasientList() {
         setIsOpen,
         setIsOpenDelete,
         handlePageChange,
-        handleSavePasien,
-        openAddPasienModal,
-        openEditPasienModal,
+        handleSavePerawat,
+        openAddPerawatModal,
+        openEditPerawatModal,
         openModalDelete,
-        handleDeletePasien,
-    } = usePasien();
+        handleDeletePerawat,
+    } = usePerawat();
     return (
         <>
             <h2 className="intro-y text-lg font-medium pt-24">
-                Pasien Management
+                Perawat Management
             </h2>
             <div className="grid grid-cols-12 gap-6 mt-5">
                 <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
@@ -69,78 +65,85 @@ export default function PasientList() {
                     <table className="table table-report -mt-2">
                         <thead>
                             <tr>
-                                <th className="whitespace-nowrap">NAME</th>
+                                <th className="text-center whitespace-nowrap">NAME</th>
+                                <th className="text-center whitespace-nowrap">NIP</th>
                                 <th className="text-center whitespace-nowrap">USIA</th>
                                 <th className="text-center whitespace-nowrap">GENDER</th>
-                                <th className="text-center whitespace-nowrap">hdDuration</th>
-                                <th className="text-center whitespace-nowrap">education</th>
-                                <th className="text-center whitespace-nowrap">pekerjaan</th>
-                                <th className="text-center whitespace-nowrap">STATUS</th>
+                                <th className="text-center whitespace-nowrap">WORK DURATION</th>
+                                <th className="text-center whitespace-nowrap">EDUCATION</th>
+                                <th className="text-center whitespace-nowrap">UNIT</th>
+                                <th className="text-center whitespace-nowrap">SHIFT</th>
                                 <th className="text-center whitespace-nowrap">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan="8" className="py-6">
+                                    <td colSpan="9" className="py-6">
                                         <div className="flex justify-center items-center">
                                             <LoaderCircle className="w-6 h-6 animate-spin text-gray-500" />
                                         </div>
                                     </td>
                                 </tr>
-                            ) : pasien.length > 0 ? (
-                                [...pasien]
-                                    .filter((pasien) =>
-                                        pasien.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                        pasien.email.toLowerCase().includes(searchTerm.toLowerCase())
+                            ) : perawat.length > 0 ? (
+                                [...perawat]
+                                    .filter((perawat) =>
+                                        perawat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                        perawat.email.toLowerCase().includes(searchTerm.toLowerCase())
                                     )
                                     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-                                    .map((pasien, index) => (
-                                        <motion.tr key={pasien.id} whileHover={{ scale: 1.02 }}>
-                                            <td>
-                                                <span className="font-medium whitespace-nowrap">{pasien.name}</span>
-                                                <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">{pasien.phone}</div>
-                                            </td>
+                                    .map((perawat, index) => (
+                                        <motion.tr key={perawat.id} whileHover={{ scale: 1.02 }}>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
-                                                    {pasien.usia}
+                                                    {perawat.name}
                                                 </div>
                                             </td>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
-                                                    {pasien.gender}
+                                                    {perawat.nip}
                                                 </div>
                                             </td>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
-                                                    {pasien.hdDuration}
+                                                    {perawat.usia}
                                                 </div>
                                             </td>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
-                                                    {pasien.education}
+                                                    {perawat.gender}
                                                 </div>
                                             </td>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
-                                                    {pasien.pekerjaan}
+                                                    {perawat.workDuration}
                                                 </div>
                                             </td>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
-                                                    {pasien.maritalStatus}
+                                                    {perawat.education}
+                                                </div>
+                                            </td>
+                                            <td className="w-40">
+                                                <div className="flex items-center justify-center ">
+                                                    {perawat.unit}
+                                                </div>
+                                            </td>
+                                            <td className="w-40">
+                                                <div className="flex items-center justify-center ">
+                                                    {perawat.shift}
                                                 </div>
                                             </td>
                                             <td className="table-report__action w-56">
                                                 <div className="flex justify-center items-center">
                                                     {/* <button
-                                                        onClick={() => openEditPasienModal(pasien)}
+                                                        onClick={() => openEditperawatModal(perawat)}
                                                         className="flex items-center mr-3"
                                                     >
                                                         <CheckSquare className="w-4 h-4 mr-1" /> Edit
                                                     </button> */}
                                                     <button
-                                                        onClick={() => openModalDelete(pasien)}
+                                                        onClick={() => openModalDelete(perawat)}
                                                         className="flex items-center text-danger"
                                                     >
                                                         <Trash2 className="w-4 h-4 mr-1" /> Delete
@@ -151,7 +154,7 @@ export default function PasientList() {
                                     ))
                             ) : (
                                 <tr>
-                                    <td colSpan="8" className="text-center py-4">Tidak ada data Pasien</td>
+                                    <td colSpan="9" className="text-center py-4">Tidak ada data Pasien</td>
                                 </tr>
                             )}
                         </tbody>
@@ -197,19 +200,19 @@ export default function PasientList() {
             </div>
 
             {/* 🔹 Modal Add/Edit */}
-            <Modal
+            {/* <Modal
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 title={modalData.title}
-                onSave={handleSavePasien}
+                onSave={handleSavePerawat}
             >
-                <InputPasien formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} />
-            </Modal>
+                <InputPerawat formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} />
+            </Modal> */}
 
             <Modaldelete
                 isOpenDelete={isOpenDelete}
                 onClose={() => setIsOpenDelete(false)}
-                onDelete={handleDeletePasien}
+                onDelete={handleDeletePerawat}
                 title={modalDataDelete.title}
             >
                 {modalDataDelete.content}
@@ -217,3 +220,5 @@ export default function PasientList() {
         </>
     )
 }
+
+export default PerawatList

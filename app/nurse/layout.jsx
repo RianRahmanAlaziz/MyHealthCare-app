@@ -1,4 +1,5 @@
 import React from 'react'
+import "@/style/css/home.css"
 
 export default function NurseLayout({ children }) {
     return (
