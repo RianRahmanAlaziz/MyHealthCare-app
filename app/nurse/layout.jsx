@@ -1,5 +1,6 @@
-import React from 'react'
+
 import "@/style/css/home.css"
+import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
 
 export default function NurseLayout({ children }) {
     return (

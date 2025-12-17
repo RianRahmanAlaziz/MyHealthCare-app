@@ -1,202 +1,65 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Tabs from '@/components/ui/tabs';
-import { BookOpen, CheckCircle, Download, Video, FileText } from 'lucide-react';
+import axiosInstance from '@/lib/axiosInstance';
+import { BookOpen, CheckCircle2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-export default function NurseEducationModule() {
+export default function NurseEducationModule({ onNavigateToLoginDashboard }) {
+    const [showModal, setShowModal] = useState(false);
     const [completedModules, setCompletedModules] = useState([]);
+    const [modules, setModules] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const modules = [
-        {
-            id: 'intro',
-            title: 'Pengantar',
-            icon: BookOpen,
-            content: `
-        Selamat datang di modul edukasi teknik relaksasi untuk perawat hemodialisis. 
-        Modul ini dirancang untuk meningkatkan pemahaman Anda tentang manajemen kecemasan 
-        pada pasien hemodialisis dan berbagai teknik relaksasi yang dapat diterapkan.
+    useEffect(() => {
+        if (
+            modules.length > 0 &&
+            completedModules.length === modules.length
+        ) {
+            setShowModal(true);
+        }
+    }, [completedModules, modules]);
 
-            Sebagai perawat, Anda memiliki peran penting dalam membantu pasien mengatasi 
-            kecemasan selama sesi dialisis. Penelitian menunjukkan bahwa kecemasan dapat 
-            mempengaruhi hasil pengobatan dan kualitas hidup pasien.
 
-        Melalui modul ini, Anda akan mempelajari:
-        • Patofisiologi kecemasan pada pasien HD
-        • Berbagai teknik relaksasi yang evidence-based
-        • Cara mengajarkan dan memandu pasien
-        • Evaluasi efektivitas intervensi
-      `,
-        },
-        {
-            id: 'anxiety',
-            title: 'Kecemasan pada Pasien HD',
-            icon: FileText,
-            content: `
-        Prevalensi & Dampak:
-        Studi menunjukkan bahwa 25-50% pasien hemodialisis mengalami kecemasan tingkat 
-        sedang hingga berat. Kecemasan ini dapat berdampak pada:
 
-        • Kepatuhan terhadap program dialisis
-        • Kualitas tidur dan nafsu makan
-        • Tekanan darah selama sesi dialisis
-        • Kualitas hidup secara keseluruhan
-        • Tingkat depresi dan isolasi sosial
+    const handleModalClose = () => {
+        setShowModal(false);
+        onNavigateToLoginDashboard()
+    };
 
-        Faktor Penyebab:
-        • Ketergantungan pada mesin dialisis
-        • Ketidakpastian tentang masa depan
-        • Perubahan gaya hidup dan diet
-        • Dampak finansial
-        • Nyeri dan ketidaknyamanan fisik
-        • Ketakutan akan komplikasi
+    useEffect(() => {
+        const fetchModules = async () => {
+            try {
+                const res = await axiosInstance.get(`/e-modul`);
+                setModules(res.data.data.data);
+            } catch (error) {
+                console.error('Gagal mengambil modul', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        Tanda & Gejala:
-        • Fisik: Jantung berdebar, berkeringat, gemetar
-        • Kognitif: Sulit konsentrasi, pikiran negatif
-        • Emosional: Gelisah, mudah marah, takut
-        • Perilaku: Menghindari, agitasi, insomnia
-      `,
-        },
-        {
-            id: 'music',
-            title: 'Terapi Musik',
-            icon: Video,
-            content: `
-        Dasar Teori:
-        Terapi musik menggunakan musik sebagai alat terapeutik untuk mengurangi kecemasan. 
-        Musik dapat mempengaruhi sistem saraf otonom, menurunkan kadar kortisol, dan 
-        merangsang pelepasan endorfin.
-
-        Evidence Base:
-        • Meta-analisis menunjukkan penurunan kecemasan sebesar 30-40%
-        • Efektif dalam menurunkan tekanan darah dan detak jantung
-        • Meningkatkan saturasi oksigen
-        • Memperbaiki mood dan kualitas tidur
-
-        Implementasi untuk Perawat:
-        1. Pilih musik dengan tempo 60-80 bpm (slow tempo)
-        2. Genre yang direkomendasikan: klasik, ambient, nature sounds
-        3. Gunakan headphone untuk pengalaman optimal
-        4. Durasi: 20-30 menit selama sesi dialisis
-        5. Perhatikan preferensi individual pasien
-
-        Tips Praktis:
-        • Mulai musik 5-10 menit sebelum kanulasi
-        • Monitor respons pasien (ekspresi wajah, tanda vital)
-        • Dokumentasikan jenis musik dan respon pasien
-        • Buat playlist yang variatif untuk berbagai pasien
-      `,
-        },
-        {
-            id: 'breathing',
-            title: 'Teknik Pernapasan',
-            icon: Video,
-            content: `
-        Dasar Fisiologi:
-        Pernapasan dalam mengaktifkan sistem saraf parasimpatik, yang memicu respons 
-        relaksasi alami tubuh.
-
-        Jenis-jenis Teknik:
-
-        1. Pernapasan Diafragma (4-4-6)
-        2. Box Breathing (4-4-4-4)
-        3. 4-7-8 Breathing
-
-        Cara Mengajarkan:
-        1. Demonstrasikan teknik
-        2. Beri instruksi bertahap
-        3. Pandu dengan suara tenang
-        4. Mulai dari 5 repetisi
-
-        Kontraindikasi:
-        • Hipertensi tidak terkontrol
-        • Gangguan pernapasan berat
-      `,
-        },
-        {
-            id: 'imagery',
-            title: 'Guided Imagery',
-            icon: Video,
-            content: `<h3>Konsep Dasar</h3>
-                        <p>
-                            Guided imagery adalah teknik visualisasi terpandu.
-                        </p>
-
-                        <h3>Script Contoh</h3>
-                        <blockquote>
-                            <p>
-                                "Bayangkan Anda berada di pantai yang tenang...<br />
-                                Rasakan pasir hangat...<br />
-                                Dengar ombak lembut..."
-                            </p>
-                        </blockquote>
-
-                        <h3>Tips Implementasi</h3>
-                        <ul>
-                            <li>Gunakan suara lembut</li>
-                            <li>Beri jeda antar kalimat</li>
-                            <li>Durasi 15–20 menit</li>
-                        </ul>`,
-        },
-        {
-            id: 'pmr',
-            title: 'Progressive Muscle Relaxation',
-            icon: Video,
-            content: `<h3>Prinsip Dasar</h3>
-                    <p>
-                        PMR (Progressive Muscle Relaxation) menegangkan dan merilekskan otot secara sistematis.
-                    </p>
-                    <h3>Manfaat</h3>
-                    <ul>
-                        <li>Mengurangi ketegangan otot</li>
-                        <li>Menurunkan kecemasan</li>
-                    </ul>
-
-                    <h3>Protokol 10 Kelompok Otot</h3>
-                    <ol>
-                        <li>Tangan kanan</li>
-                        <li>Tangan kiri</li>
-                        <li>Lengan atas kanan</li>
-                        <li>Dan seterusnya hingga 10 kelompok otot</li>
-                    </ol>
-
-                    <h3>Modifikasi untuk Pasien Hemodialisis (HD)</h3>
-                    <ul>
-                        <li>Fokus pada otot yang jauh dari fistula</li>
-                        <li>Hindari gerakan ekstrem</li>
-                    </ul>`,
-        },
-        {
-            id: 'evaluation',
-            title: 'Evaluasi & Dokumentasi',
-            icon: FileText,
-            content: `
-        Indikator Keberhasilan:
-
-        Objektif:
-        • Penurunan tekanan darah
-        • Penurunan heart rate
-
-        Subjektif:
-        • Pasien merasa lebih tenang
-
-        Dokumentasi yang Efektif:
-        • Pre, during, post intervention
-
-        Format Dokumentasi:
-        "Pasien cemas 7/10, dilakukan terapi musik 20 menit..."
-      `,
-        },
-    ];
+        fetchModules();
+    }, []);
 
     const toggleModule = (moduleId) => {
-        if (completedModules.includes(moduleId)) {
-            setCompletedModules(completedModules.filter((id) => id !== moduleId));
-        } else {
-            setCompletedModules([...completedModules, moduleId]);
-        }
+        setCompletedModules((prev) => {
+            if (prev.includes(moduleId)) {
+                return prev.filter((id) => id !== moduleId);
+            }
+            return [...prev, moduleId];
+        });
     };
+
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-gray-500">Memuat modul...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen p-6">
@@ -235,27 +98,34 @@ export default function NurseEducationModule() {
                     completedModules={completedModules}
                     toggleModule={toggleModule}
                 />
+            </div>
 
-                {/* Completion Message */}
-                {completedModules.length === modules.length && (
-                    <div className="mt-6 bg-linear-to-br from-green-50 to-teal-50 rounded-2xl p-6 border-2 border-green-200">
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center">
-                                <CheckCircle className="w-8 h-8 text-white" />
-                            </div>
-                            <div>
-                                <h3 className="text-green-900 mb-2">
-                                    Selamat! Anda telah menyelesaikan semua modul!
-                                </h3>
-                                <p className="text-green-800 text-sm">
-                                    Pengetahuan ini akan sangat membantu Anda dalam memberikan
-                                    perawatan terbaik pada pasien hemodialisis.
-                                </p>
+            <Dialog open={showModal} onOpenChange={setShowModal}>
+                <DialogContent open={showModal} className="sm:max-w-md rounded-3xl">
+                    <DialogHeader>
+                        <div className="flex justify-center mb-4">
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center
+                        bg-linear-to-br from-teal-400 to-blue-500`} >
+                                <CheckCircle2 className="w-8 h-8 text-white" />
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                        <DialogTitle className="text-center">
+                            Selamat! <br /> Anda telah menyelesaikan semua modul!
+                        </DialogTitle>
+                    </DialogHeader>
+
+                    <p className="text-center text-gray-600 mb-6">
+                        Pengetahuan ini akan sangat membantu Anda dalam memberikan
+                        perawatan terbaik pada pasien hemodialisis.
+                    </p>
+
+                    <Button
+                        onClick={handleModalClose}
+                        className="w-full h-12 rounded-xl cursor-pointer bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white" >
+                        Lanjutkan
+                    </Button>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

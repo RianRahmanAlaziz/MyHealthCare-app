@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify';
 import PatientConsentScreen from '@/components/patient/PatientConsentScreen'
-
+import axiosInstance from '@/lib/axiosInstance';
 
 export default function ConsentScreenpage() {
     const router = useRouter();
@@ -22,12 +22,29 @@ export default function ConsentScreenpage() {
         // ❌ Bukan patient
         if (!user.roles?.includes("Pasient")) {
             toast.error("Anda tidak memiliki akses ke halaman ini");
-            router.replace("/");
+            router.replace("/auth/login");
             return;
         }
+
+        const updateLastStep = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            await axiosInstance.post("/auth/update-last-step", {
+                last_step: "patient-consent"
+            });
+
+            // simpan juga di localStorage (biar sinkron)
+            const user = JSON.parse(localStorage.getItem("user"));
+            user.last_step = "patient-consent";
+            localStorage.setItem("user", JSON.stringify(user));
+        };
+
+        updateLastStep();
+
     }, [router]);
     const onNavigateToDemographics = () => {
-        router.push("/patient/demo-graphics");
+        router.push("/patient/demographics");
     };
     return (
         <PatientConsentScreen onNavigateToDemographics={onNavigateToDemographics} />

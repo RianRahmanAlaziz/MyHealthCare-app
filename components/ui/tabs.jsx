@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle, Download } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 
 export default function Tabs({ modules, completedModules, toggleModule }) {
     const [activeTab, setActiveTab] = useState(modules[0].id);
@@ -13,7 +14,6 @@ export default function Tabs({ modules, completedModules, toggleModule }) {
             <div className="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2   rounded-xl">
                 {modules.map((module) => {
                     const active = activeTab === module.id;
-
                     return (
                         <button
                             key={module.id}
@@ -27,7 +27,7 @@ export default function Tabs({ modules, completedModules, toggleModule }) {
                                 }
                             `}
                         >
-                            <span className="text-xs text-center pt-1">{module.title}</span>
+                            <span className="text-xs text-center pt-1">{module.name}</span>
 
                             {/* FIX UKURAN TETAP */}
                             <div className="h-3 flex items-center">
@@ -49,13 +49,10 @@ export default function Tabs({ modules, completedModules, toggleModule }) {
                         <div className="max-w-4xl">
                             <h2 className="text-gray-900 mb-6">{module.title}</h2>
 
-                            {module.content
-                                .split("\n\n")
-                                .map((paragraph, idx) => (
-                                    <p key={idx} className="text-gray-700 mb-4">
-                                        {paragraph}
-                                    </p>
-                                ))}
+                            <div
+                                className="ck-content mt-2"
+                                dangerouslySetInnerHTML={{ __html: module.content }}
+                            />
                         </div>
 
                         <div className="mt-8 flex gap-4 mx-auto">
@@ -76,10 +73,6 @@ export default function Tabs({ modules, completedModules, toggleModule }) {
                                 ) : (
                                     "Tandai Sebagai Selesai"
                                 )}
-                            </button>
-
-                            <button className="h-12 rounded-xl border-2 border-gray-300 px-4 cursor-pointer">
-                                <Download className="w-5 h-5" />
                             </button>
                         </div>
                     </div>

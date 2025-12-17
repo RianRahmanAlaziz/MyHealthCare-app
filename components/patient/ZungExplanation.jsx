@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Heart, Smile, Frown, Meh, AlertCircle } from "lucide-react";
 
-export default function ZungExplanation({ onNavigateToEducation }) {
+export default function ZungExplanation({ onNavigateToZungScale }) {
     return (
         <div className="min-h-screen p-6">
             <div className="max-w-2xl mx-auto py-8">
@@ -61,7 +61,7 @@ export default function ZungExplanation({ onNavigateToEducation }) {
 
                 {/* Button */}
                 <Button
-                    onClick={onNavigateToEducation}
+                    onClick={onNavigateToZungScale}
                     className="w-full h-14 rounded-xl bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
                 >
                     Saya Mengerti, Lanjutkan

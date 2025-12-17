@@ -9,8 +9,16 @@ export default function RoleSelectionPage() {
     const router = useRouter();
     useEffect(() => {
         document.title = "Role Selection | HealthCare Research";
+        const user = JSON.parse(localStorage.getItem("user"));
 
-    }, []);
+        // ❌ Belum login
+        if (!user) {
+            toast.error("Silakan login terlebih dahulu");
+            router.replace("/auth/login");
+            return;
+        }
+
+    }, [router]);
 
     const onSelectRole = async (roles) => {
         try {

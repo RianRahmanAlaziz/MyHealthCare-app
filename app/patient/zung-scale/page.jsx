@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect } from 'react'
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import NurseEducationModule from '@/components/nurse/NurseEducationModule'
-import { toast } from 'react-toastify'
+import ZungScale from '@/components/nurse/ZungScale'
 import axiosInstance from '@/lib/axiosInstance';
+import { toast } from 'react-toastify' // ✅ Tambahkan ini
 
-export default function NurseEducationModulePage() {
+export default function KuesionerPage() {
     const router = useRouter();
     useEffect(() => {
-        document.title = "E-Module Edukasi Perawat | HealthCare Research";
+        document.title = "Skala Kecemasan Zung (SAS) | HealthCare Research";
+
         const user = JSON.parse(localStorage.getItem("user"));
 
         // ❌ Belum login
@@ -20,9 +21,9 @@ export default function NurseEducationModulePage() {
         }
 
         // ❌ Bukan patient
-        if (!user.roles?.includes("Perawat")) {
+        if (!user.roles?.includes("Pasient")) {
             toast.error("Anda tidak memiliki akses ke halaman ini");
-            router.replace("/");
+            router.replace("/auth/login");
             return;
         }
 
@@ -31,23 +32,19 @@ export default function NurseEducationModulePage() {
             if (!token) return;
 
             await axiosInstance.post("/auth/update-last-step", {
-                last_step: "nurse-education"
+                last_step: "zung-scale"
             });
 
             // simpan juga di localStorage (biar sinkron)
             const user = JSON.parse(localStorage.getItem("user"));
-            user.last_step = "nurse-education";
+            user.last_step = "zung-scale";
             localStorage.setItem("user", JSON.stringify(user));
         };
 
         updateLastStep();
 
-    }, [router]);
-
-    const onNavigateToLoginDashboard = () => {
-        router.push("/dashboard");
-    };
+    }, []);
     return (
-        <NurseEducationModule onNavigateToLoginDashboard={onNavigateToLoginDashboard} />
+        <ZungScale />
     )
 }

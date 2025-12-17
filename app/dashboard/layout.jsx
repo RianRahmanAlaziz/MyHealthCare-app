@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import 'react-toastify/dist/ReactToastify.css';
 import "tom-select/dist/css/tom-select.css";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Topbar from "@/components/cms/layouts/Topbar";
 import Sidebar from "@/components/cms/layouts/Sidebar";
 import Switcher from "@/components/cms/layouts/Switcher";
@@ -84,12 +84,25 @@ export default function DashboardLayout({ children }) {
         return () => clearInterval(interval);
     }, [router]);
 
+    const handleLogout = async () => {
+        try {
+            await axiosInstance.post("/auth/logout");
+        } finally {
+            // 🧹 bersihkan auth
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+
+            window.location.href = "/auth/login";
+
+        }
+    };
+
     return (
         <>
             {/* Layout khusus dashboard */}
             <div className="min-h-screen py-5 md:py-5 md:pr-5">
                 <Menumobile />
-                <Topbar />
+                <Topbar handleLogout={handleLogout} />
                 <div className="flex overflow-hidden">
                     <Sidebar />
                     <div className="content">

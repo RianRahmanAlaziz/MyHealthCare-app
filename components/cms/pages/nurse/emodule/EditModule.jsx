@@ -13,9 +13,6 @@ export default function EditModule({ id }) {
 
     const {
         loading,
-        iconOptions,
-        selectedIcon,
-        setSelectedIcon,
         formData,
         setFormData,
         errors,
@@ -89,53 +86,6 @@ export default function EditModule({ id }) {
                                                     <div className="text-danger text-xs mt-1">{errors.name}</div>
                                                 )}
                                                 <div className="form-help text-right">Maximum character 0/70</div>
-
-                                            </div>
-                                        </div>
-                                        <div className="form-inline items-start flex-col xl:flex-row mt-5 pt-5 first:mt-0 first:pt-0">
-                                            <div className="form-label xl:w-64 xl:mr-10!">
-                                                <div className="text-left">
-                                                    <div className="flex items-center">
-                                                        <div className="font-medium">Icon</div>
-                                                        <div
-                                                            className="ml-2 px-2 py-0.5 bg-slate-200 text-slate-600 dark:bg-darkmode-300 dark:text-slate-400 text-xs rounded-md">
-                                                            Required</div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div className="w-full mt-3 xl:mt-0 flex-1">
-                                                <Select
-                                                    id='icon'
-                                                    name='icon'
-                                                    placeholder="Pilih Icon"
-                                                    options={iconOptions}
-                                                    value={selectedIcon}
-                                                    classNamePrefix="react-select"
-                                                    onChange={(selected) => {
-                                                        setSelectedIcon(selected);
-                                                        setFormData((prev) => ({
-                                                            ...prev,
-                                                            icon: selected.value, // ✅ SIMPAN NAMA ICON STRING KE DB
-                                                        }));
-                                                    }}
-                                                    isSearchable
-                                                    formatOptionLabel={(option) => {
-                                                        const IconComponent = LucideIcons[option.value];
-
-                                                        return (
-                                                            <div className="flex items-center gap-2">
-                                                                {IconComponent && <IconComponent size={18} />}
-                                                                <span>{option.label}</span>
-                                                            </div>
-                                                        );
-                                                    }}
-                                                />
-
-                                                {errors.icon && (
-                                                    <div className="text-danger text-xs mt-1">{errors.icon}</div>
-                                                )}
-
 
                                             </div>
                                         </div>

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify' // ✅ Tambahkan ini
 import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
 import Login from '@/components/auth/Login'
 import axiosInstance from '@/lib/axiosInstance';
+import { STEP_ROUTE_MAP } from "@/lib/stepRouteMap";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -35,23 +36,17 @@ export default function LoginPage() {
             localStorage.setItem('token', data.access_token);
             localStorage.setItem("user", JSON.stringify(data.user));
 
-            const roles = data.user.roles; // ⬅ dari API (array)
             setTimeout(() => {
-                // Tidak punya role → route ke role selection
-                if (!roles || roles.length === 0) {
-                    window.location.href = "/auth/role-selection";
+                // 🔁 PRIORITAS: last_step
+                if (data.user.last_step && STEP_ROUTE_MAP[data.user.last_step]) {
+                    window.location.href = STEP_ROUTE_MAP[data.user.last_step];
+                    return;
                 }
-                // Role admin → route dashboard
-                else if (roles.includes("Admin")) {
-                    window.location.href = "/dashboard";
-                }
-                // Jika ada role lain (optional)
-                else if (roles.includes("Perawat")) {
-                    window.location.href = "/dashboard"; // atau redirect lain
-                } else if (roles.includes("Pasient")) {
-                    window.location.href = "/dashboard"; // atau redirect lain
-                }
-            }, 800);
+
+                // fallback jika belum ada step
+                window.location.href = "/auth/role-selection";
+            }, 500);
+
         } catch (err) {
             console.error('Error:', err);
             toast.error(

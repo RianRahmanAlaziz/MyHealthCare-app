@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Lock, Phone, User } from 'lucide-react';
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
-import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
+import axiosInstance from '@/lib/axiosInstance';
 
 export default function Registration({ onNavigateToLogin }) {
     const [step, setStep] = useState(1);
@@ -36,6 +36,7 @@ export default function Registration({ onNavigateToLogin }) {
                 phone: formData.phone,
                 password: formData.password,
             });
+
 
             // Jika sukses → redirect ke login
             toast.success('Registrasi berhasil!');

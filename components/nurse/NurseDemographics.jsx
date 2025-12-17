@@ -9,7 +9,7 @@ import { ArrowRight, Stethoscope } from 'lucide-react';
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
 
-export default function NurseDemographics({ onNavigateToZungScale }) {
+export default function NurseDemographics({ onNavigateToEducation }) {
     const [formData, setFormData] = useState({
         name: '',
         nip: '',
@@ -38,7 +38,7 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
 
             if (res.data.success) {
                 // ✅ BERHASIL SIMPAN 
-                onNavigateToZungScale();
+                onNavigateToEducation();
             }
 
         } catch (error) {
@@ -228,7 +228,7 @@ export default function NurseDemographics({ onNavigateToZungScale }) {
                             type="submit"
                             className="w-full h-14 rounded-xl bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg cursor-pointer"
                         >
-                            Lanjutkan ke Skala Kecemasan
+                            Lanjutkan
                             <ArrowRight className="w-5 h-5 ml-2" />
                         </Button>
                     </form>
