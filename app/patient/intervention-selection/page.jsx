@@ -20,11 +20,11 @@ export default function InterventionSelectionPage() {
         }
 
         // ❌ Bukan patient
-        // if (!user.roles?.includes("Pasient")) {
-        //     toast.error("Anda tidak memiliki akses ke halaman ini");
-        //     router.replace("/auth/login");
-        //     return;
-        // }
+        if (!user.roles?.includes("Pasient")) {
+            toast.error("Anda tidak memiliki akses ke halaman ini");
+            router.replace("/auth/login");
+            return;
+        }
 
         const updateLastStep = async () => {
             const token = localStorage.getItem("token");
