@@ -10,46 +10,29 @@ import Topbar from "@/components/cms/layouts/Topbar";
 import Sidebar from "@/components/cms/layouts/Sidebar";
 import Switcher from "@/components/cms/layouts/Switcher";
 import Menumobile from "@/components/cms/layouts/Menumobile";
+import axiosInstance from "@/lib/axiosInstance";
 
 export default function DashboardLayout({ children }) {
     const router = useRouter();
     useEffect(() => {
-        // ✅ Ambil token dari localStorage 
         const token = localStorage.getItem('token');
-
-        if (!token) {
-            toast.error('Silakan login terlebih dahulu!');
-            window.location.href = "/auth/login";
-            return;
-        }
-
         // ✅ Fungsi untuk refresh token
         const refreshToken = async () => {
             try {
-                const res = await fetch('http://127.0.0.1:8000/api/auth/refresh', {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: "application/json"
-                    },
-                });
+                const res = await axiosInstance.post("/auth/refresh");
 
-                if (res.ok) {
-                    const data = await res.json();
+                const data = res.data;
 
-                    localStorage.setItem('token', data.access_token);
+                localStorage.setItem("token", data.access_token);
 
-                    toast.success('Token berhasil diperbarui 🔄');
-                } else {
-                    localStorage.removeItem('token');
-                    toast.error('Sesi habis, silakan login ulang.');
-
-                    window.location.href = "/auth/login";
-                }
+                toast.success("Token berhasil diperbarui 🔄");
             } catch (error) {
-                console.error('Error refresh token:', error);
-                toast.error('Gagal memperbarui token.');
-                localStorage.removeItem('token');
+                console.error("Error refresh token:", error);
+
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+
+                toast.error("Sesi habis, silakan login ulang.");
                 window.location.href = "/auth/login";
             }
         };
@@ -57,19 +40,10 @@ export default function DashboardLayout({ children }) {
         // ✅ Cek token saat halaman dibuka
         const checkAuth = async () => {
             try {
-                const res = await fetch('http://127.0.0.1:8000/api/auth/me', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: "application/json"
-                    },
-                });
-
-                if (!res.ok) {
-                    // Jika token invalid, coba refresh token
-                    await refreshToken();
-                }
+                await axiosInstance.get("/auth/me");
+                // jika sukses → user masih login
             } catch (error) {
-                console.error('Error verifying login:', error);
+                // token invalid / expired → coba refresh
                 await refreshToken();
             }
         };
@@ -82,7 +56,7 @@ export default function DashboardLayout({ children }) {
         }, 50 * 60 * 1000);
 
         return () => clearInterval(interval);
-    }, [router]);
+    }, []);
 
     const handleLogout = async () => {
         try {

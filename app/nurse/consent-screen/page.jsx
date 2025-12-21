@@ -9,8 +9,8 @@ export default function ConsentScreenPage() {
     const router = useRouter();
     useEffect(() => {
         document.title = "Informed Consent Perawat | HealthCare Research";
-        const user = JSON.parse(localStorage.getItem("user"));
 
+        const user = JSON.parse(localStorage.getItem("user"));
         // ❌ Belum login
         if (!user) {
             toast.error("Silakan login terlebih dahulu");

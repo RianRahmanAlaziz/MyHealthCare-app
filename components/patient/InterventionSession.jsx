@@ -1,43 +1,54 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react';
-import Image from "next/image";
-import { toast } from 'react-toastify' // ✅ Tambahkan ini
-import { Button } from '@/components/ui/button';
-import { Play, Pause, RotateCcw, CheckCircle2, Volume2, Heart, ArrowLeft } from 'lucide-react';
-import { useSearchParams, useRouter } from "next/navigation";
-import axiosInstance from '@/lib/axiosInstance';
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSearchParams, useRouter } from "next/navigation"
+import { toast } from 'react-toastify'
+import { Button } from '@/components/ui/button'
+import {
+    Play,
+    Pause,
+    RotateCcw,
+    CheckCircle2,
+    Heart,
+    ArrowLeft
+} from 'lucide-react'
+import axiosInstance from '@/lib/axiosInstance'
 
-export default function InterventionSession({ params, onNavigateToSelection }) {
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id"); // ← ID diambil di sini
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [isCompleted, setIsCompleted] = useState(false);
-    const [currentIntervention, setCurrentIntervention] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+export default function InterventionSession({ onNavigateToSelection }) {
+    const searchParams = useSearchParams()
+    const id = searchParams.get("id")
+    const router = useRouter()
+    const videoRef = useRef(null)
+
+    const [currentIntervention, setCurrentIntervention] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [timeElapsed, setTimeElapsed] = useState(0)
+    const [isCompleted, setIsCompleted] = useState(false)
     // === AMBIL DATA INTERVENTION ===
     useEffect(() => {
-        if (!id) return;
-        setLoading(true);
-        axiosInstance.get(`/intervention/${id}`)
-            .then(res => {
-                const data = res.data.data;
+        if (!id) return
+
+        const fetchIntervention = async () => {
+            try {
+                setLoading(true)
+                const res = await axiosInstance.get(`/intervention/${id}`)
+                const data = res.data.data
 
                 setCurrentIntervention({
                     ...data,
                     benefits: JSON.parse(data.benefits),
                     instructions: JSON.parse(data.instructions)
-                });
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false); // ⬅ agar tidak loading terus saat error
-            });
+                })
+            } catch (error) {
+                console.error(error)
+            } finally {
+                setLoading(false)
+            }
+        }
 
-    }, [id]);
+        fetchIntervention()
+    }, [id])
 
     useEffect(() => {
         if (currentIntervention) {
@@ -47,24 +58,32 @@ export default function InterventionSession({ params, onNavigateToSelection }) {
 
     // === TIMER ===
     useEffect(() => {
-        if (!currentIntervention) return;
+        if (!isPlaying || isCompleted || !currentIntervention) return
 
-        let interval;
+        const interval = setInterval(() => {
+            setTimeElapsed(prev => {
+                if (prev >= 30) {
+                    setIsPlaying(false)
+                    setIsCompleted(true)
+                    return prev
+                }
+                return prev + 1
+            })
+        }, 1000)
+
+        return () => clearInterval(interval)
+    }, [isPlaying, isCompleted, currentIntervention])
+
+    /* ================= VIDEO CONTROL ================= */
+    useEffect(() => {
+        if (!videoRef.current) return
+
         if (isPlaying && !isCompleted) {
-            interval = setInterval(() => {
-                setTimeElapsed((prev) => {
-                    if (prev >= currentIntervention.duration) {
-                        setIsPlaying(false);
-                        setIsCompleted(true);
-                        return prev;
-                    }
-                    return prev + 1;
-                });
-            }, 1000);
+            videoRef.current.play().catch(() => { })
+        } else {
+            videoRef.current.pause()
         }
-
-        return () => clearInterval(interval);
-    }, [isPlaying, isCompleted, currentIntervention]);
+    }, [isPlaying, isCompleted])
 
     useEffect(() => {
         if (isCompleted && currentIntervention && id) {
@@ -79,28 +98,16 @@ export default function InterventionSession({ params, onNavigateToSelection }) {
         }
     }, [isCompleted, currentIntervention, id]);
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    };
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-gray-500">Memuat data sesi...</p>
-            </div>
-        );
-    }
+    /* ================= SAVE SESSION ================= */
+    useEffect(() => {
+        if (!videoRef.current) return;
 
-    if (!currentIntervention) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-red-500">Intervention tidak ditemukan.</p>
-            </div>
-        );
-    }
-
-    const progress = (timeElapsed / currentIntervention.duration) * 100;
+        if (isPlaying && !isCompleted) {
+            videoRef.current.play().catch(() => { });
+        } else {
+            videoRef.current.pause();
+        }
+    }, [isPlaying, isCompleted]);
 
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);
@@ -110,7 +117,37 @@ export default function InterventionSession({ params, onNavigateToSelection }) {
         setIsPlaying(false);
         setTimeElapsed(0);
         setIsCompleted(false);
+
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
+        }
     };
+
+    /* ================= UTILS ================= */
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen text-gray-500">
+                Memuat data sesi...
+            </div>
+        )
+    }
+
+    if (!currentIntervention) {
+        return (
+            <div className="flex items-center justify-center h-screen text-red-500">
+                Intervention tidak ditemukan
+            </div>
+        )
+    }
+
+    const progress = (timeElapsed / 30) * 100;
 
     return (
         <div className="min-h-screen p-6">
@@ -125,29 +162,28 @@ export default function InterventionSession({ params, onNavigateToSelection }) {
 
                 <div className="text-center mb-8">
                     <h1 className="text-teal-700 mb-2">{currentIntervention.name}</h1>
-                    <p className="text-gray-600">Sesi Relaksasi Terpandu</p>
                 </div>
 
                 <div className="bg-white rounded-3xl shadow-xl overflow-hidden mb-6">
                     <div className="relative h-64 bg-linear-to-br from-gray-900 to-gray-800">
-                        <Image
-                            src={currentIntervention.image_url}
-                            alt={currentIntervention.name}
-                            fill
-                            className="object-cover opacity-60"
-                            sizes="100vw"
-                            priority
+                        <video
+                            ref={videoRef}
+                            src={currentIntervention.video_url}
+                            className="absolute inset-0 w-full h-full object-cover opacity-60"
+                            preload="metadata"
+                            playsInline
+                            muted
                         />
 
+
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <div className={`w-20 h-20 rounded-full bg-linear-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-2xl`}>
-                                {isCompleted ? (
+                            {isCompleted && (
+                                <div className="w-20 h-20 rounded-full bg-linear-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-2xl">
                                     <CheckCircle2 className="w-10 h-10 text-white" />
-                                ) : (
-                                    <Volume2 className="w-10 h-10 text-white animate-pulse" />
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
+
 
                         {isPlaying && !isCompleted && (
                             <div className="absolute top-4 right-4 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
@@ -158,10 +194,9 @@ export default function InterventionSession({ params, onNavigateToSelection }) {
                     </div>
 
                     <div className="p-8">
-
                         <div className="text-center mb-6">
                             <div className="text-4xl text-gray-900 mb-2">
-                                {formatTime(timeElapsed)} / {formatTime(currentIntervention.duration)}
+                                {formatTime(timeElapsed)} / {formatTime(30)}
                             </div>
                             <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
                                 <div

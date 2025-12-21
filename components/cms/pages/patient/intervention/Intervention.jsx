@@ -126,12 +126,11 @@ export default function Intervention() {
 
                                 <div className="p-5">
                                     <div className="h-40 image-fit">
-                                        <Image
-                                            src={intervention.image_url}
-                                            width={300}
-                                            height={300}
-                                            alt={intervention.name}
-                                            className="rounded-md"
+                                        <video
+                                            src={intervention.video_url}
+                                            className="w-full h-full object-cover"
+                                            controls
+                                            preload="metadata"
                                         />
                                     </div>
 

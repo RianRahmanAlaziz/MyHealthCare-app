@@ -21,7 +21,7 @@ export default function Login({ onNavigateToRegistration, handleLogin }) {
                 className="w-full max-w-md">
                 {/* Logo/Header */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
+                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
                         <HeartPulse className="w-10 h-10 text-white" />
                     </div>
                     <h1 className="text-teal-700 mb-2">HealthCare Research</h1>
@@ -47,7 +47,7 @@ export default function Login({ onNavigateToRegistration, handleLogin }) {
                                     id="identifier"
                                     name="identifier"
                                     type="text"
-                                    placeholder="+62 812-3456-7890"
+                                    placeholder="0812-3456-7890"
                                     value={identifier}
                                     onChange={(e) => setIdentifier(e.target.value)}
                                     className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
@@ -86,7 +86,7 @@ export default function Login({ onNavigateToRegistration, handleLogin }) {
 
                         <Button
                             type="submit"
-                            className="w-full h-12 bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white rounded-xl shadow-lg cursor-pointer"
+                            className="w-full h-12 bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white rounded-xl shadow-lg cursor-pointer"
                         >
                             Masuk
                         </Button>

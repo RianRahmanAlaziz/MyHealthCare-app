@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Image } from 'lucide-react'
 import * as LucideIcons from "lucide-react";
+import { FileVideoCamera } from 'lucide-react';
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import useIntervention from '@/components/cms/hooks/patient/useIntervention';
@@ -369,21 +370,22 @@ export default function InputIntervention() {
                             <div className="intro-x col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3 2xl:mt-8">
                                 <div className="intro-x flex items-center h-10">
                                     <h2 className="text-lg font-medium truncate mr-5">
-                                        Gambar
+                                        Video
                                     </h2>
                                 </div>
                                 <div className="mt-5">
                                     <div className="box px-5 py-3 mb-3 flex items-center zoom-in">
                                         <div className="col-span-12 sm:col-span-12">
-                                            <label className="form-label">Upload Image</label>
+                                            <label className="form-label">Upload File</label>
                                             <div className="border-2 border-dashed dark:border-darkmode-400 rounded-md pt-4">
                                                 <div className="flex flex-wrap px-4 cursor-pointer" id="preview-container3">
                                                     {preview && (
-                                                        <div className="w-24 h-24 relative image-fit mb-5 mr-5 cursor-pointer zoom-in">
-                                                            <img
-                                                                className="rounded-md"
-                                                                alt="Preview Image"
-                                                                src={preview} />
+                                                        <div className="file w-24 h-24 relative image-fit mb-5 mr-5 cursor-pointer zoom-in">
+                                                            <div className="w-3/5 file__icon file__icon--file mx-auto">
+                                                                <div className="file__icon__file-name">
+                                                                    <FileVideoCamera />
+                                                                </div>
+                                                            </div>
                                                             <div
                                                                 title="Remove this image?"
                                                                 className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2" onClick={removePreview}>
@@ -410,7 +412,7 @@ export default function InputIntervention() {
                                                     <span className="text-primary mr-1 cursor-pointer">Upload a file</span>
                                                     or drag and
                                                     drop
-                                                    <input id="input" name="image" type="file" accept="image/*"
+                                                    <input id="input" name="video" type="file" accept="video/*"
                                                         onChange={handleImageChange}
                                                         className="w-full h-full top-0 left-0 absolute opacity-0 cursor-pointer"
                                                     />

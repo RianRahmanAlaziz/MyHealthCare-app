@@ -135,7 +135,7 @@ export default function useIntervention(interventionId = null) {
             payload.append(`instructions[${i}]`, item);
         });
 
-        if (file) payload.append("image", file);
+        if (file) payload.append("video", file);
         if (isEdit) payload.append("_method", "PUT");
 
         return payload;
@@ -182,7 +182,7 @@ export default function useIntervention(interventionId = null) {
                 icon: item.icon,
                 benefits: safeParse(item.benefits),
                 instructions: safeParse(item.instructions),
-                image_url: item.image_url
+                video_url: item.video_url
             });
 
             setSelectedDuration(

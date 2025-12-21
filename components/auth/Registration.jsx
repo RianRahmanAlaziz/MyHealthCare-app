@@ -146,7 +146,7 @@ export default function Registration({ onNavigateToLogin }) {
                                             id="phone"
                                             name="phone"
                                             type="tel"
-                                            placeholder="+62 812-3456-7890"
+                                            placeholder="0812-3456-7890"
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                             className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"

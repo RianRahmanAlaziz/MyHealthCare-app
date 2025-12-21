@@ -4,6 +4,7 @@ import { Stethoscope, User, ShieldCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
 import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
+import axiosInstance from '@/lib/axiosInstance';
 
 export default function RoleSelectionPage() {
     const router = useRouter();
@@ -30,21 +31,12 @@ export default function RoleSelectionPage() {
                 return;
             }
 
-            const res = await fetch('http://127.0.0.1:8000/api/auth/update-role', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ roles })
+            const res = await axiosInstance.post("/auth/update-role", {
+                roles,
             });
 
-            const data = await res.json();
+            const data = res.data;
 
-            if (!res.ok) {
-                toast.error(data.message || 'Gagal mengubah role');
-                return;
-            }
             localStorage.setItem("user", JSON.stringify(data.user));
             toast.success('Role berhasil dipilih');
 

@@ -1,56 +1,30 @@
 'use client';
-
-import { CheckSquare, Trash2, ChevronLeft, ChevronsLeft, ChevronRight, ChevronsRight, UserPlus, LoaderCircle } from 'lucide-react'
 import { useEffect } from 'react'
-import Modal from '@/components/cms/common/Modal';
 import { motion } from "framer-motion";
-import Modaldelete from '@/components/cms/common/Modaldelete';
-import useUser from '@/components/cms/hooks/users/useUser';
-import InputUsers from './InputUsers';
+import { CheckSquare, Trash2, ChevronLeft, ChevronsLeft, ChevronRight, ChevronsRight, UserPlus, LoaderCircle, Eye } from 'lucide-react'
+import useSkalaKecemasan from '@/components/cms/hooks/patient/useSkalaKecemasan';
 
-function UsersList() {
+export default function SkalaKecemasan() {
     const {
-        isOpen,
-        isOpenDelete,
-        users,
+        assessments,
         loading,
         searchTerm,
         setSearchTerm,
         pagination,
-        modalData,
-        modalDataDelete,
-        formData,
-        setFormData,
-        errors,
-        setErrors,
-        setIsOpen,
-        setIsOpenDelete,
         handlePageChange,
-        handleSaveUser,
-        openAddUserModal,
-        openEditUserModal,
-        openModalDelete,
-        handleDeleteUser,
-    } = useUser();
+    } = useSkalaKecemasan();
 
     useEffect(() => {
-        document.title = "Dashboard | Users Management";
+        document.title = "Dashboard | Hasil Skala Kecemasan";
     }, []);
-
 
     return (
         <>
             <h2 className="intro-y text-lg font-medium pt-24">
-                Users Management
+                Hasil Skala Kecemasan
             </h2>
             <div className="grid grid-cols-12 gap-6 mt-5">
                 <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-                    {/* <button
-                        onClick={openAddUserModal}
-                        className="btn btn-secondary shadow-md mr-2">
-                        <UserPlus className='pr-1.5' />  Users
-                    </button> */}
-
                     <div className="hidden md:block mx-auto text-slate-500"></div>
                     <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                         <div className="w-56 relative text-slate-500">
@@ -71,8 +45,9 @@ function UsersList() {
                         <thead>
                             <tr>
                                 <th className="whitespace-nowrap">NAME</th>
-                                <th className="text-center whitespace-nowrap">ROLE</th>
-                                <th className="text-center whitespace-nowrap">ACTIONS</th>
+                                <th className="text-center whitespace-nowrap">TOTAL SCORE</th>
+                                <th className="text-center whitespace-nowrap">HASIL</th>
+                                {/* <th className="text-center whitespace-nowrap">ACTIONS</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -84,45 +59,42 @@ function UsersList() {
                                         </div>
                                     </td>
                                 </tr>
-                            ) : users.length > 0 ? (
-                                [...users]
-                                    .filter((user) =>
-                                        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+                            ) : assessments.length > 0 ? (
+                                [...assessments]
+                                    .filter((assessments) =>
+                                        assessments.user.name.toLowerCase().includes(searchTerm.toLowerCase())
                                     )
                                     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-                                    .map((user, index) => (
-                                        <motion.tr key={user.id} whileHover={{ scale: 1.02 }}>
+                                    .map((assessments, index) => (
+                                        <motion.tr key={assessments.id} whileHover={{ scale: 1.02 }}>
                                             <td>
-                                                <span className="font-medium whitespace-nowrap">{user.name}</span>
-                                                <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">{user.phone}</div>
+                                                <span className="font-medium whitespace-nowrap">{assessments.user.name}</span>
+                                                <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">{assessments.user.phone}</div>
                                             </td>
-                                            <td className="w-40">
+                                            <td >
                                                 <div className="flex items-center justify-center ">
-                                                    {user.role_names?.join(', ') || 'No role'}
+                                                    {assessments.total_score}
                                                 </div>
                                             </td>
-                                            <td className="table-report__action w-56">
+                                            <td >
+                                                <div className="flex items-center justify-center ">
+                                                    {assessments.interpretation}
+                                                </div>
+                                            </td>
+                                            {/* <td className="table-report__action w-56">
                                                 <div className="flex justify-center items-center">
                                                     <button
-                                                        onClick={() => openEditUserModal(user)}
                                                         className="flex items-center mr-3"
                                                     >
-                                                        <CheckSquare className="w-4 h-4 mr-1" /> Edit
+                                                        <Eye className="w-4 h-4 mr-1" /> Show
                                                     </button>
-                                                    {/* <button
-                                                        onClick={() => openModalDelete(user)}
-                                                        className="flex items-center text-danger"
-                                                    >
-                                                        <Trash2 className="w-4 h-4 mr-1" /> Delete
-                                                    </button> */}
                                                 </div>
-                                            </td>
+                                            </td> */}
                                         </motion.tr>
                                     ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" className="text-center py-4">Tidak ada data user</td>
+                                    <td colSpan="4" className="text-center py-4">Tidak ada data</td>
                                 </tr>
                             )}
                         </tbody>
@@ -167,26 +139,6 @@ function UsersList() {
                 </div>
             </div>
 
-            {/* 🔹 Modal Add/Edit */}
-            <Modal
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
-                title={modalData.title}
-                onSave={handleSaveUser}
-            >
-                <InputUsers formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} />
-            </Modal>
-
-            <Modaldelete
-                isOpenDelete={isOpenDelete}
-                onClose={() => setIsOpenDelete(false)}
-                onDelete={handleDeleteUser}
-                title={modalDataDelete.title}
-            >
-                {modalDataDelete.content}
-            </Modaldelete>
         </>
     )
 }
-
-export default UsersList

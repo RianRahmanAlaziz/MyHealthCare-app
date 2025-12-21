@@ -139,14 +139,12 @@ export default function InterventionSelection({ onSelectIntervention }) {
                                 disabled={isCompleted}
                                 className={` bg-white cursor-pointer rounded-3xl shadow-lg overflow-hidden transition-all  ${isCompleted ? 'opacity-50 cursor-not-allowed' : ''} `} >
                                 <div className="relative h-40 overflow-hidden">
-                                    <Image
-                                        src={intervention.image_url}
-                                        alt={intervention.name}
-                                        width={500}
-                                        height={300}
-                                        className="w-full h-full object-cover"
+                                    <video
+                                        src={intervention.video_url}
+                                        className="w-full h-full object-cover rounded-md"
+                                        muted
+                                        preload="metadata"
                                     />
-
                                     <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-lg">
                                         {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
                                     </div>
