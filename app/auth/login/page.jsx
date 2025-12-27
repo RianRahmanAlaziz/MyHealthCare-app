@@ -16,13 +16,20 @@ export default function LoginPage() {
     // ✅ Cek apakah sudah login
     useEffect(() => {
         document.title = "Login | HealthCare Research";
-        const token = localStorage.getItem('token');
-        if (token) {
-            toast.info('Anda sudah login.');
-            window.location.href = "/dashboard";
 
-        }
-    }, [router]);
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        toast.info("Anda sudah login, mengalihkan ke dashboard...");
+
+        // beri waktu toast tampil
+        const timer = setTimeout(() => {
+            router.replace("/dashboard");
+        }, 800);
+
+        return () => clearTimeout(timer);
+    }, []);
+
 
 
     const handleLogin = async (identifier, password) => {
@@ -48,7 +55,7 @@ export default function LoginPage() {
                 }
 
                 // fallback jika belum ada step
-                window.location.href = "/auth/role-selection";
+                router.replace("/auth/role-selection");
             }, 500);
 
         } catch (err) {
