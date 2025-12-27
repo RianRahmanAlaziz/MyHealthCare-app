@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react';
-import { Stethoscope, User, ShieldCheck, Loader2 } from 'lucide-react';
+import { Stethoscope, User, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
 import axiosInstance from '@/lib/axiosInstance';

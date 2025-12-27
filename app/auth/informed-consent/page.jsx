@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import ResearchConsent from '@/components/consent/ResearchConsent'
 import { useEffect } from 'react'
-import { ToastContainer, toast } from 'react-toastify';
 
 
 export default function InformedConsentPage() {
