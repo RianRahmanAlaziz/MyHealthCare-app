@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 import { useRouter } from "next/navigation";
 import NurseEducationModule from '@/components/nurse/NurseEducationModule'
-import { toast } from 'react-toastify'
 import axiosInstance from '@/lib/axiosInstance';
 
 export default function NurseEducationModulePage() {

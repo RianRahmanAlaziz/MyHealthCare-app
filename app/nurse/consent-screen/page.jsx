@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import NurseConsentScreen from '@/components/nurse/NurseConsentScreen'
-import { toast } from 'react-toastify'
 import axiosInstance from '@/lib/axiosInstance';
 
 export default function ConsentScreenPage() {
