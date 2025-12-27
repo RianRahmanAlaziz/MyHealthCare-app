@@ -4,7 +4,7 @@ import axiosInstance from '@/lib/axiosInstance';
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify'
 import { STEP_ROUTE_MAP } from "@/lib/stepRouteMap";
-import { BookText, CircleUser, CircleUserRound, Library, SquareUser, Users2 } from "lucide-react";
+import { BookText, CircleUser, CircleUserRound, Library, SquareUser } from "lucide-react";
 import useDashboard from '@/components/cms/hooks/master-data/useDashboard';
 import { DashboardCardSkeleton } from '@/components/cms/common/DashboardCardSkeleton';
 
