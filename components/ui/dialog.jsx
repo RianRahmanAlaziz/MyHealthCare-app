@@ -51,7 +51,12 @@ function DialogContent({ className, open, children, ...props }) {
 
             <AnimatePresence>
                 {open ? (
-                    <DialogPrimitive.Content forceMount asChild>
+                    <DialogPrimitive.Content
+                        onPointerDownOutside={(e) => e.preventDefault()}
+                        onInteractOutside={(e) => e.preventDefault()}
+                        onEscapeKeyDown={(e) => e.preventDefault()}
+                        forceMount
+                        asChild>
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9, y: -10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
