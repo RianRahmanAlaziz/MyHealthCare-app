@@ -1,47 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { BookOpen, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import axiosInstance from "@/lib/axiosInstance";
+import { useSearchParams } from "next/navigation";
 
 export default function EducationModule({ onNavigateToIntervention }) {
     const [expandedSection, setExpandedSection] = useState(null);
     const [progress, setProgress] = useState(0);
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
 
-    const sections = [
-        {
-            title: "Apa itu Kecemasan?",
-            content: `Kecemasan adalah respons alami tubuh terhadap stres atau ancaman. Pada pasien hemodialisis, 
-      kecemasan dapat muncul karena berbagai faktor seperti ketergantungan pada mesin dialisis, perubahan 
-      gaya hidup, atau kekhawatiran tentang masa depan. Memahami kecemasan adalah langkah pertama untuk 
-      mengelolanya dengan efektif.`,
-        },
-        {
-            title: "Dampak Kecemasan pada Pasien Hemodialisis",
-            content: `Kecemasan yang tidak ditangani dapat mempengaruhi kualitas hidup dan hasil pengobatan. 
-      Dampaknya meliputi: gangguan tidur, penurunan nafsu makan, kesulitan konsentrasi, peningkatan 
-      tekanan darah, dan penurunan kepatuhan terhadap program dialisis.`,
-        },
-        {
-            title: "Teknik Relaksasi: Pengenalan",
-            content: `Teknik relaksasi adalah metode yang terbukti efektif untuk mengurangi kecemasan. Beberapa teknik 
-      yang akan Anda pelajari meliputi terapi musik, pernapasan dalam, guided imagery, dan progressive muscle relaxation.`,
-        },
-        {
-            title: "Terapi Musik",
-            content: `Terapi musik menggunakan musik yang menenangkan untuk mengurangi stres dan kecemasan. 
-      Musik dapat menurunkan detak jantung dan tekanan darah.`,
-        },
-        {
-            title: "Pernapasan Dalam (Deep Breathing)",
-            content: `Pernapasan dalam adalah teknik sederhana namun efektif untuk mengurangi kecemasan.`,
-        },
-        {
-            title: "Manfaat Jangka Panjang",
-            content: `Manfaat jangka panjang termasuk peningkatan kualitas tidur, penurunan kecemasan, dan mood yang lebih baik.`,
-        },
-    ];
+    const [sections, setSections] = useState([]);
+
+    useEffect(() => {
+        if (!id) return;
+
+        axiosInstance
+            .get(`/intervention/${id}/education`)
+            .then(res => {
+                const titles = res.data.title || [];
+                const contents = res.data.content || [];
+
+                const merged = titles.map((title, i) => ({
+                    title,
+                    content: contents[i] ?? "",
+                }));
+
+                setSections(merged);
+            });
+    }, [id]);
+
 
     const toggleSection = (index) => {
         if (expandedSection === index) {
@@ -83,7 +73,7 @@ export default function EducationModule({ onNavigateToIntervention }) {
                 </div>
 
                 {/* Hero Image */}
-                <div className="mb-6 rounded-2xl overflow-hidden shadow-lg">
+                {/* <div className="mb-6 rounded-2xl overflow-hidden shadow-lg">
                     <Image
                         src="https://images.unsplash.com/photo-1635545999375-057ee4013deb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
                         alt="Meditation and Wellness"
@@ -92,7 +82,7 @@ export default function EducationModule({ onNavigateToIntervention }) {
                         className="rounded-xl object-cover"
                         priority
                     />
-                </div>
+                </div> */}
 
                 {/* Accordion */}
                 <div className="space-y-4 mb-6">

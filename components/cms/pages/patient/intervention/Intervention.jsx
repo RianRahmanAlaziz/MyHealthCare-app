@@ -1,8 +1,6 @@
 'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { Plus, Share2, Download, MoreVertical, Edit2, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Plus, MoreVertical, Edit2, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import useIntervention from "@/components/cms/hooks/patient/useIntervention";
 import { useRouter } from "next/navigation";
@@ -26,7 +24,7 @@ export default function Intervention() {
         handleEdit,
     } = useIntervention();
     const onNavigateToAddIntervention = () => {
-        router.push("/dashboard/pasien/intervention-selection/create");
+        router.push("/dashboard/pasien/intervention/create");
     };
     return (
         <>
@@ -103,7 +101,7 @@ export default function Intervention() {
                                                         <button
                                                             onClick={(e) => {
                                                                 e.stopPropagation()
-                                                                router.push(`/dashboard/pasien/intervention-selection/edit/${intervention.id}`)
+                                                                router.push(`/dashboard/pasien/intervention/edit/${intervention.id}`)
                                                             }}
                                                             className="flex w-full items-center gap-2 px-4 py-2 hover:bg-slate-100"
                                                         >

@@ -62,7 +62,7 @@ export default function InterventionSession({ onNavigateToSelection }) {
 
         const interval = setInterval(() => {
             setTimeElapsed(prev => {
-                if (prev >= 30) {
+                if (prev >= currentIntervention.duration) {
                     setIsPlaying(false)
                     setIsCompleted(true)
                     return prev
@@ -147,7 +147,7 @@ export default function InterventionSession({ onNavigateToSelection }) {
         )
     }
 
-    const progress = (timeElapsed / 30) * 100;
+    const progress = (timeElapsed / currentIntervention.duration) * 100;
 
     return (
         <div className="min-h-screen p-6">
@@ -196,7 +196,7 @@ export default function InterventionSession({ onNavigateToSelection }) {
                     <div className="p-8">
                         <div className="text-center mb-6">
                             <div className="text-4xl text-gray-900 mb-2">
-                                {formatTime(timeElapsed)} / {formatTime(30)}
+                                {formatTime(timeElapsed)} / {formatTime(currentIntervention.duration)}
                             </div>
                             <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
                                 <div

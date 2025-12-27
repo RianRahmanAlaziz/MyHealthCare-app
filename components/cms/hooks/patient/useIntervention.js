@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function useIntervention(interventionId = null) {
     const router = useRouter();
+    const [submitting, setSubmitting] = useState(false);
     const [intervention, setIntervention] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
@@ -21,10 +22,31 @@ export default function useIntervention(interventionId = null) {
     const [modalDataDelete, setModalDataDelete] = useState({
         title: '',
     });
+    const [materials, setMaterials] = useState([
+        { title: "", content: "" }
+    ]);
+
+    const handleAddMaterial = () => {
+        setMaterials(prev => [
+            ...prev,
+            { title: "", content: "" }
+        ]);
+    };
+
+    const handleMaterialChange = (index, field, value) => {
+        const updated = [...materials];
+        updated[index][field] = value;
+        setMaterials(updated);
+    };
+
+    const handleRemoveMaterial = (index) => {
+        setMaterials((prev) => prev.filter((_, i) => i !== index));
+    };
+
+
     const [formData, setFormData] = useState({
         name: "",
         slug: "",
-        description: "",
         duration: null,
         icon: "",
         benefits: [],
@@ -74,11 +96,14 @@ export default function useIntervention(interventionId = null) {
     };
 
     useEffect(() => {
-        if (searchTerm.trim() !== '') setLoading(true);
+        setLoading(true);
+
         const timeout = setTimeout(() => {
-            fetchIntervention(searchTerm);
+            fetchIntervention(1, searchTerm);
         }, 500);
+
         return () => clearTimeout(timeout);
+
     }, [searchTerm]);
 
     const handlePageChange = (page) => {
@@ -101,7 +126,6 @@ export default function useIntervention(interventionId = null) {
             setFormData({
                 name: item.name ?? '',
                 slug: item.slug ?? '',
-                description: item.description ?? '',
                 duration: item.duration ?? null,
                 icon: item.icon ?? '',
                 benefits: safeParse(item.benefits),
@@ -123,7 +147,6 @@ export default function useIntervention(interventionId = null) {
 
         payload.append("name", data.name);
         payload.append("slug", data.slug);
-        payload.append("description", data.description);
         payload.append("duration", data.duration);
         payload.append("icon", data.icon);
 
@@ -135,21 +158,36 @@ export default function useIntervention(interventionId = null) {
             payload.append(`instructions[${i}]`, item);
         });
 
+        materials.forEach((item, i) => {
+            payload.append(`materials[${i}][title]`, item.title);
+            payload.append(`materials[${i}][content]`, item.content);
+        });
+
         if (file) payload.append("video", file);
         if (isEdit) payload.append("_method", "PUT");
+
 
         return payload;
     };
 
     const handleSaveIntervention = async (file = null) => {
         try {
-            const payload = buildPayload(formData, file, false);
+            setSubmitting(true);
 
+            const payload = buildPayload(formData, file, false);
+            const isMaterialsValid = materials.every(
+                m => m.title.trim() !== "" && m.content.trim() !== ""
+            );
+
+            if (!isMaterialsValid) {
+                toast.error("Judul dan konten materi wajib diisi");
+                return;
+            }
             await axiosInstance.post("/intervention", payload);
 
             await fetchIntervention();
 
-            router.push("/dashboard/pasien/intervention-selection");
+            router.push("/dashboard/pasien/intervention");
             toast.success("Intervention berhasil ditambahkan ✅");
         } catch (error) {
             console.log("🔥 FULL ERROR:", error);
@@ -162,6 +200,8 @@ export default function useIntervention(interventionId = null) {
             } else {
                 toast.error("Gagal menambahkan Intervention 🚫");
             }
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -173,11 +213,12 @@ export default function useIntervention(interventionId = null) {
 
             const res = await axiosInstance.get(`/intervention/${id}`);
             const item = res.data.data;
+            const titles = safeParse(item.title);
+            const contents = safeParse(item.content);
 
             setFormData({
                 name: item.name,
                 slug: item.slug,
-                description: item.description,
                 duration: item.duration,
                 icon: item.icon,
                 benefits: safeParse(item.benefits),
@@ -194,6 +235,16 @@ export default function useIntervention(interventionId = null) {
             setSelectedBenefits(safeParse(item.benefits).map(v => ({ value: v, label: v })));
             setSelectedInstructions(safeParse(item.instructions).map(v => ({ value: v, label: v })));
 
+            if (titles.length && contents.length) {
+                setMaterials(
+                    titles.map((t, i) => ({
+                        title: t,
+                        content: contents[i] ?? ""
+                    }))
+                );
+            } else {
+                setMaterials([{ title: "", content: "" }]);
+            }
 
         } catch (err) {
             toast.error("Gagal mengambil data intervention!");
@@ -209,13 +260,22 @@ export default function useIntervention(interventionId = null) {
 
     const handleUpdateIntervention = async (file = null) => {
         try {
-            const payload = buildPayload(formData, file, true);
+            setSubmitting(true);
 
+            const payload = buildPayload(formData, file, true);
+            const isMaterialsValid = materials.every(
+                m => m.title.trim() !== "" && m.content.trim() !== ""
+            );
+
+            if (!isMaterialsValid) {
+                toast.error("Judul dan konten materi wajib diisi");
+                return;
+            }
             await axiosInstance.post(`/intervention/${editId}`, payload);
 
             await fetchIntervention();
 
-            router.push("/dashboard/pasien/intervention-selection");
+            router.push("/dashboard/pasien/intervention");
             toast.success("Intervention berhasil diperbarui ✅");
         } catch (error) {
             console.error("❌ Error Update:", error.response?.data);
@@ -225,6 +285,8 @@ export default function useIntervention(interventionId = null) {
             } else {
                 toast.error("Gagal memperbarui Intervention ⚠️");
             }
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -292,5 +354,10 @@ export default function useIntervention(interventionId = null) {
         editId,
         handleEdit,
         handleUpdateIntervention,
+        submitting,
+        handleAddMaterial,
+        handleMaterialChange,
+        materials,
+        handleRemoveMaterial
     };
 }

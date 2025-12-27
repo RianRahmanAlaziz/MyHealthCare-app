@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowRight, User } from 'lucide-react';
+import { ArrowRight, User, Loader2 } from 'lucide-react';
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
 
 export default function PatientDemographics({ onNavigateToZungExplanation }) {
     const [step, setStep] = useState(1);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         usia: '',
@@ -23,10 +24,12 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (loading) return;
+
         if (step === 1) {
             setStep(2);
         } else {
-
+            setLoading(true);
             try {
                 const res = await axiosInstance.post("/pasien", {
                     name: formData.name,
@@ -46,14 +49,25 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
             } catch (error) {
                 console.error("Gagal menyimpan:", error.response?.data || error);
                 toast.error(error.response?.data?.message || "Gagal menyimpan data");
+            } finally {
+                setLoading(false);
             }
         }
     };
 
     return (
         <div className="min-h-screen p-6">
+            {loading && (
+                <div className="fixed inset-0 bg-white/70 backdrop-blur flex items-center justify-center z-50">
+                    <div className="flex flex-col items-center gap-3">
+                        <Loader2 className="w-10 h-10 animate-spin text-teal-600" />
+                        <p className="text-gray-700 text-sm">
+                            Menyimpan data....
+                        </p>
+                    </div>
+                </div>
+            )}
             <div className="max-w-2xl mx-auto py-8">
-
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-teal-400 to-blue-500 mb-4 shadow-lg">
@@ -84,6 +98,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Label>
                                     <Input
                                         id="name"
+                                        disabled={loading}
                                         type="text"
                                         placeholder="Contoh: AS"
                                         value={formData.name}
@@ -105,6 +120,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Label>
                                     <Input
                                         id="usia"
+                                        disabled={loading}
                                         type="number"
                                         placeholder="Contoh: 45"
                                         value={formData.usia}
@@ -125,6 +141,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Label>
                                     <Select
                                         value={formData.gender}
+                                        disabled={loading}
                                         onValueChange={(value) =>
                                             setFormData({ ...formData, gender: value })
                                         }
@@ -146,6 +163,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Label>
                                     <Select
                                         value={formData.hdDuration}
+                                        disabled={loading}
                                         onValueChange={(value) =>
                                             setFormData({ ...formData, hdDuration: value })
                                         }
@@ -172,6 +190,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Label>
                                     <Select
                                         value={formData.education}
+                                        disabled={loading}
                                         onValueChange={(value) =>
                                             setFormData({ ...formData, education: value })
                                         }
@@ -198,6 +217,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Label>
                                     <Select
                                         value={formData.pekerjaan}
+                                        disabled={loading}
                                         onValueChange={(value) =>
                                             setFormData({ ...formData, pekerjaan: value })
                                         }
@@ -224,6 +244,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                                     </Label>
                                     <Select
                                         value={formData.maritalStatus}
+                                        disabled={loading}
                                         onValueChange={(value) =>
                                             setFormData({ ...formData, maritalStatus: value })
                                         }
@@ -254,6 +275,7 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
                             {step === 2 && (
                                 <Button
                                     type="button"
+                                    disabled={loading}
                                     onClick={() => setStep(1)}
                                     variant="outline"
                                     className="flex-1 h-12 rounded-xl border-2 border-gray-300 cursor-pointer"
@@ -264,10 +286,20 @@ export default function PatientDemographics({ onNavigateToZungExplanation }) {
 
                             <Button
                                 type="submit"
+                                disabled={loading}
                                 className="flex-1 h-12 rounded-xl bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg cursor-pointer"
                             >
-                                {step === 1 ? 'Selanjutnya' : 'Lanjutkan'}
-                                <ArrowRight className="w-5 h-5 ml-2" />
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        Memproses...
+                                    </>
+                                ) : (
+                                    <>
+                                        {step === 1 ? 'Selanjutnya' : 'Lanjutkan'}
+                                        <ArrowRight className="w-5 h-5" />
+                                    </>
+                                )}
                             </Button>
                         </div>
 

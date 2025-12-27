@@ -44,7 +44,7 @@ export default function InterventionSelectionPage() {
     }, [router]);
 
     const onSelectIntervention = ({ id, slug }) => {
-        router.push(`/patient/intervention-selection/${slug}?id=${id}`);
+        router.push(`/patient/intervention-selection/${slug}/education?id=${id}`);
     };
 
     return (

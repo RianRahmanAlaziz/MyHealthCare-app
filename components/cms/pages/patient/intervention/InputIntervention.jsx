@@ -1,15 +1,24 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react'
-import { Image } from 'lucide-react'
+import Link from 'next/link';
 import * as LucideIcons from "lucide-react";
 import { FileVideoCamera } from 'lucide-react';
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
 import useIntervention from '@/components/cms/hooks/patient/useIntervention';
+import dynamic from 'next/dynamic';
+
+const Select = dynamic(() => import('react-select'), {
+    ssr: false,
+});
+
+const CreatableSelect = dynamic(
+    () => import('react-select/creatable'),
+    { ssr: false }
+);
 
 export default function InputIntervention() {
-    const [preview, setPreview] = useState(null)
     const [file, setFile] = useState(null)
+    const [preview, setPreview] = useState(null)
+    const [processingVideo, setProcessingVideo] = useState(false);
     const inputRef = useRef(null)
     const {
         selectedInstructions,
@@ -27,6 +36,11 @@ export default function InputIntervention() {
         errors,
         setErrors,
         handleSaveIntervention,
+        submitting,
+        handleAddMaterial,
+        handleMaterialChange,
+        materials,
+        handleRemoveMaterial
     } = useIntervention();
 
     useEffect(() => {
@@ -37,9 +51,25 @@ export default function InputIntervention() {
         const selectedFile = e.target.files[0]
         if (!selectedFile) return
 
-        setFile(selectedFile)
-        const previewUrl = URL.createObjectURL(selectedFile)
-        setPreview(previewUrl)
+        setProcessingVideo(true);
+
+        if (preview) URL.revokeObjectURL(preview);
+
+        const videoUrl = URL.createObjectURL(selectedFile);
+
+        const video = document.createElement("video");
+        video.src = videoUrl;
+
+        video.onloadedmetadata = () => {
+            setFile(selectedFile);
+            setPreview(videoUrl);
+            setProcessingVideo(false);
+        };
+
+        video.onerror = () => {
+            alert("Video tidak valid");
+            setProcessingVideo(false);
+        };
     }
 
     function removePreview() {
@@ -101,7 +131,8 @@ export default function InputIntervention() {
                                 <div className="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-5">
                                     <div
                                         className="font-medium text-base flex items-center border-b border-slate-200/60 dark:border-darkmode-400 pb-5">
-                                        <i data-lucide="chevron-down" className="w-4 h-4 mr-2"></i>Description
+                                        <LucideIcons.ChevronDown className="w-4 h-4 mr-2" />
+                                        Description Intervention
                                     </div>
                                     <div className="mt-5">
                                         <div
@@ -123,7 +154,7 @@ export default function InputIntervention() {
                                                     name="name"
                                                     type="text"
                                                     className="form-control"
-                                                    placeholder="Title"
+                                                    placeholder="Name"
                                                     value={formData.name}
                                                     onChange={handleChange}
                                                 />
@@ -175,7 +206,6 @@ export default function InputIntervention() {
                                                             className="ml-2 px-2 py-0.5 bg-slate-200 text-slate-600 dark:bg-darkmode-300 dark:text-slate-400 text-xs rounded-md">
                                                             Required</div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                             <div className="w-full mt-3 xl:mt-0 flex-1">
@@ -193,8 +223,6 @@ export default function InputIntervention() {
                                                 {errors.duration && (
                                                     <div className="text-danger text-xs mt-1">{errors.duration}</div>
                                                 )}
-
-
                                             </div>
                                         </div>
                                         <div className="form-inline items-start flex-col xl:flex-row mt-5 pt-5 first:mt-0 first:pt-0">
@@ -224,7 +252,7 @@ export default function InputIntervention() {
                                                             icon: selected.value, // ✅ SIMPAN NAMA ICON STRING KE DB
                                                         }));
                                                     }}
-                                                    isSearchable
+                                                    isSearchable={false}
                                                     formatOptionLabel={(option) => {
                                                         const IconComponent = LucideIcons[option.value];
 
@@ -319,46 +347,96 @@ export default function InputIntervention() {
                                                 )}
                                             </div>
                                         </div>
-
-                                        <div className="form-inline items-start flex-col xl:flex-row mt-5 pt-5 first:mt-0 first:pt-0">
-                                            <div className="form-label xl:w-64 xl:mr-10!">
-                                                <div className="text-left">
-                                                    <div className="flex items-center">
-                                                        <div className="font-medium">Description</div>
-                                                        <div
-                                                            className="ml-2 px-2 py-0.5 bg-slate-200 text-slate-600 dark:bg-darkmode-300 dark:text-slate-400 text-xs rounded-md">
-                                                            Required</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="w-32 mt-3 xl:mt-0 flex-1">
-                                                <textarea
-                                                    name="description"
-                                                    id="description"
-                                                    rows={5}
-                                                    className="form-control"
-                                                    placeholder="Masukkan deskripsi..."
-                                                    value={formData.description}
-                                                    onChange={handleChange}
-                                                />
-
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex justify-center flex-col md:flex-row gap-2 mt-5">
-                                <a href="/dashboard/pasien/intervention-selection"
-                                    className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52">
-                                    Cancel
-                                </a>
+                            <div className="intro-y box p-5 mt-5">
+                                <div className="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-5">
+                                    <div
+                                        className="font-medium text-base flex items-center border-b border-slate-200/60 dark:border-darkmode-400 pb-5">
+                                        <LucideIcons.ChevronDown className="w-4 h-4 mr-2" />
+                                        Materi Intervention
+                                    </div>
+                                    <div id="formContainer" className="mt-5">
+                                        {materials.map((item, index) => (
+                                            <div key={index} className="border-b pb-5 mb-5 last:border-0 relative">
+
+                                                {/* TITLE */}
+                                                <div className="form-inline items-start flex-col xl:flex-row mt-5">
+                                                    <label className="form-label xl:w-64 xl:mr-10!">
+                                                        <div className="font-medium">Title</div>
+                                                    </label>
+                                                    <div className="w-full mt-3 xl:mt-0 flex-1">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="Judul materi"
+                                                            value={item.title}
+                                                            onChange={(e) =>
+                                                                handleMaterialChange(index, "title", e.target.value)
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* CONTENT */}
+                                                <div className="form-inline items-start flex-col xl:flex-row mt-5">
+                                                    <div className="form-label xl:w-64 xl:mr-10!">
+                                                        <div className="font-medium">Content</div>
+                                                    </div>
+                                                    <div className="w-full mt-3 xl:mt-0 flex-1">
+                                                        <textarea
+                                                            rows={4}
+                                                            className="form-control"
+                                                            placeholder="Masukkan Content..."
+                                                            value={item.content}
+                                                            onChange={(e) =>
+                                                                handleMaterialChange(index, "content", e.target.value)
+                                                            }
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {/* BUTTON HAPUS */}
+                                                {materials.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-danger btn-sm absolute top-38 right-0"
+                                                        onClick={() => handleRemoveMaterial(index)}
+                                                    >
+                                                        <LucideIcons.Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 <button
                                     type="button"
+                                    className="btn py-2 px-4 btn-outline-secondary w-full md:w-24 text-xs mt-3"
+                                    onClick={handleAddMaterial}
+                                >
+                                    <LucideIcons.Plus /> Tambah
+                                </button>
+                            </div>
+
+                            <div className="flex justify-center flex-col md:flex-row gap-2 mt-5">
+                                <Link
+                                    className={`btn py-3 border-slate-300 dark:border-darkmode-400text-slate-500 w-full md:w-52 ${(processingVideo || submitting) ? "pointer-events-none opacity-50" : ""}`}
+                                    href="/dashboard/pasien/intervention-selection">
+                                    Cancel
+                                </Link>
+                                <button
+                                    type="button"
+                                    disabled={!file || processingVideo || submitting}
                                     onClick={() => handleSaveIntervention(file)}
                                     className="btn py-3 btn-primary w-full md:w-52"
                                 >
-                                    Save
+                                    {submitting && (
+                                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    )}
+                                    {submitting ? "Menyimpan..." : "Save"}
                                 </button>
                             </div>
                         </div>
@@ -405,14 +483,22 @@ export default function InputIntervention() {
                                                             </div>
                                                         </div>
                                                     )}
+                                                    {processingVideo && (
+                                                        <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+                                                            <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                                            Memproses video...
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div className="px-4 pb-4 flex items-center relative cursor-pointer">
 
-                                                    <Image className="w-4 h-4 mr-2 cursor-pointer" />
+                                                    <FileVideoCamera className="w-4 h-4 mr-2 cursor-pointer" />
                                                     <span className="text-primary mr-1 cursor-pointer">Upload a file</span>
                                                     or drag and
                                                     drop
                                                     <input id="input" name="video" type="file" accept="video/*"
+                                                        ref={inputRef}
+                                                        disabled={processingVideo || submitting}
                                                         onChange={handleImageChange}
                                                         className="w-full h-full top-0 left-0 absolute opacity-0 cursor-pointer"
                                                     />
