@@ -10,21 +10,6 @@ export default function NurseEducationModulePage() {
     const router = useRouter();
     useEffect(() => {
         document.title = "E-Module Edukasi Perawat | HealthCare Research";
-        const user = JSON.parse(localStorage.getItem("user"));
-
-        // ❌ Belum login
-        if (!user) {
-            toast.error("Silakan login terlebih dahulu");
-            router.replace("/auth/login");
-            return;
-        }
-
-        // ❌ Bukan patient
-        if (!user.roles?.includes("Perawat")) {
-            toast.error("Anda tidak memiliki akses ke halaman ini");
-            router.replace("/");
-            return;
-        }
 
         const updateLastStep = async () => {
             const token = localStorage.getItem("token");
