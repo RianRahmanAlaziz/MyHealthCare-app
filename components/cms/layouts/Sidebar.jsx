@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
 import Sidelink from '../common/Sidelink'
-import { Users, LayoutDashboard, SquareUser, User, FolderKanban, ShieldUser, BookOpenText, GalleryHorizontalEnd } from 'lucide-react'
+import { Users, LayoutDashboard, SquareUser, User, FolderKanban, ShieldUser, BookOpenText, GalleryHorizontalEnd, Building2, BriefcaseBusiness, Blocks, ListCheck, ListChecks } from 'lucide-react'
 
 function Sidebar() {
     return (
@@ -34,8 +34,8 @@ function Sidebar() {
                         icon={<User />}
                     />
                     <Sidelink
-                        title="Intervention Selection"
-                        href="/dashboard/pasien/intervention-selection"
+                        title="Intervention"
+                        href="/dashboard/pasien/intervention"
                         icon={<FolderKanban />}
                     />
                     <Sidelink
@@ -61,7 +61,18 @@ function Sidebar() {
                         icon={<BookOpenText />}
                     />
                 </Sidelink>
-
+                <Sidelink
+                    title="Master Data"
+                    icon={
+                        <Blocks />
+                    }
+                >
+                    <Sidelink
+                        title="Question Management"
+                        href="/dashboard/master-data/question"
+                        icon={<ListChecks />}
+                    />
+                </Sidelink>
             </ul>
         </nav>
     )

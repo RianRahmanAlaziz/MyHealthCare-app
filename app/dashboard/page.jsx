@@ -4,14 +4,14 @@ import axiosInstance from '@/lib/axiosInstance';
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify'
 import { STEP_ROUTE_MAP } from "@/lib/stepRouteMap";
+import { BookText, CircleUser, CircleUserRound, Library, SquareUser, Users2 } from "lucide-react";
+import useDashboard from '@/components/cms/hooks/master-data/useDashboard';
+import { DashboardCardSkeleton } from '@/components/cms/common/DashboardCardSkeleton';
 
 export default function DashboardIndexPage() {
     const router = useRouter();
-
-
     useEffect(() => {
         document.title = "Dashboard | HealthCare Research";
-
 
         const user = JSON.parse(localStorage.getItem("user"));
 
@@ -49,11 +49,122 @@ export default function DashboardIndexPage() {
 
         updateLastStep();
     }, [router]);
+
+    const {
+        totalUsers,
+        totalpasient,
+        totalperawat,
+        totalmodul,
+        totalintervetion,
+        loading,
+    } = useDashboard();
+
     return (
         <>
-            <h2 className="intro-y text-lg font-medium pt-8 sm:pt-24">
-                HealthCare Research
-            </h2>
+            <div className="col-span-12 mt-24">
+                <div className="intro-y flex items-center h-10">
+                    <h2 className="text-lg font-medium truncate mr-5">
+                        HealthCare Research
+                    </h2>
+                </div>
+                <div className="grid grid-cols-12 gap-6 mt-5">
+
+                    {loading ? (
+                        <>
+                            <DashboardCardSkeleton />
+                            <DashboardCardSkeleton />
+                            <DashboardCardSkeleton />
+                        </>
+                    ) : (
+                        <>
+                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div className="report-box zoom-in">
+                                    <div className="box p-5">
+                                        <div className="flex">
+                                            <SquareUser className="report-box__icon text-primary" />
+                                        </div>
+
+                                        <div className="text-3xl font-medium leading-8 mt-6">
+                                            {totalUsers.toLocaleString("id-ID")}
+                                        </div>
+
+                                        <div className="text-base text-slate-500 mt-1">
+                                            Users
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div className="report-box zoom-in">
+                                    <div className="box p-5">
+                                        <div className="flex">
+                                            <CircleUserRound className="report-box__icon text-primary" />
+                                        </div>
+
+                                        <div className="text-3xl font-medium leading-8 mt-6">
+                                            {totalpasient.toLocaleString("id-ID")}
+                                        </div>
+
+                                        <div className="text-base text-slate-500 mt-1">
+                                            Pasien
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div className="report-box zoom-in">
+                                    <div className="box p-5">
+                                        <div className="flex">
+                                            <CircleUser className="report-box__icon text-primary" />
+                                        </div>
+
+                                        <div className="text-3xl font-medium leading-8 mt-6">
+                                            {totalperawat.toLocaleString("id-ID")}
+                                        </div>
+
+                                        <div className="text-base text-slate-500 mt-1">
+                                            Perawat
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div className="report-box zoom-in">
+                                    <div className="box p-5">
+                                        <div className="flex">
+                                            <BookText className="report-box__icon text-primary" />
+                                        </div>
+                                        <div className="text-3xl font-medium leading-8 mt-6">
+                                            {totalmodul.toLocaleString("id-ID")}
+                                        </div>
+                                        <div className="text-base text-slate-500 mt-1">
+                                            E-Modul
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div className="report-box zoom-in">
+                                    <div className="box p-5">
+                                        <div className="flex">
+                                            <Library className="report-box__icon text-primary" />
+                                        </div>
+
+                                        <div className="text-3xl font-medium leading-8 mt-6">
+                                            {totalintervetion.toLocaleString("id-ID")}
+                                        </div>
+
+                                        <div className="text-base text-slate-500 mt-1">
+                                            Intervention
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                </div>
+            </div>
         </>
     );
 }

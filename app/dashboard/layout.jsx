@@ -61,13 +61,15 @@ export default function DashboardLayout({ children }) {
     const handleLogout = async () => {
         try {
             await axiosInstance.post("/auth/logout");
+        } catch (error) {
+            console.warn("Logout error:", error);
         } finally {
             // 🧹 bersihkan auth
             localStorage.removeItem("token");
             localStorage.removeItem("user");
 
+            // ✅ client-side navigation
             window.location.href = "/auth/login";
-
         }
     };
 
