@@ -1,12 +1,11 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowRight, Brain, CheckCircle2 } from 'lucide-react';
-import axiosInstance from "@/lib/axiosInstance";
+import { ArrowRight, Brain, CheckCircle2, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import useQuestions from '../hooks/useQuestions';
 import useAssessment from '../hooks/useAssessment';
@@ -17,7 +16,7 @@ export default function ZungScale({ onNavigateToEducation }) {
     const [showModal, setShowModal] = useState(false);
     const { questions, loading } = useQuestions();
     const { submitAssessment } = useAssessment();
-
+    const [submitting, setSubmitting] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState({});
 
@@ -45,10 +44,13 @@ export default function ZungScale({ onNavigateToEducation }) {
         }
 
         try {
-            const res = await submitAssessment(answers);
+            setSubmitting(true);
+            await submitAssessment(answers);
             setShowModal(true);
         } catch (err) {
             // error sudah ditangani di hook
+        } finally {
+            setSubmitting(false); // ✅ stop loading
         }
     };
 
@@ -61,7 +63,7 @@ export default function ZungScale({ onNavigateToEducation }) {
 
     const handleModalClose = () => {
         setShowModal(false);
-        router.push(`/patient/education-module`);
+        router.push(`/patient/intervention-selection`);
     };
 
     if (loading) {
@@ -160,36 +162,44 @@ export default function ZungScale({ onNavigateToEducation }) {
                     </div>
 
                     <RadioGroup
-                        value={answers[currentId]?.toString() || ''}
+                        value={answers[currentId]?.toString() || ""}
                         onValueChange={(value) => handleAnswer(parseInt(value))}
                         className="space-y-3"
                     >
-                        {scale.map((option) => (
-                            <motion.div
-                                key={option.value}
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: option.value * 0.05 }}
-                                className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all cursor-pointer hover:bg-gray-50 ${answers[currentId] === option.value
-                                    ? 'border-blue-500 bg-blue-50'
-                                    : 'border-gray-200'
-                                    }`}
-                            >
-                                <RadioGroupItem
-                                    value={option.value.toString()}
-                                    id={`q${currentId}-${option.value}`}
-                                />
-                                <Label
-                                    htmlFor={`q${currentId}-${option.value}`}
-                                    className="flex-1 cursor-pointer text-gray-700"
+                        {scale.map((option) => {
+                            const isActive = answers[currentId] === option.value;
+
+                            return (
+                                <motion.div
+                                    key={option.value}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: option.value * 0.05 }}
+                                    onClick={() => handleAnswer(option.value)}   // ⭐ INI KUNCI NYA
+                                    className={`flex items-center space-x-3 p-4 rounded-xl border-2
+                transition-all cursor-pointer
+                hover:bg-gray-50
+                ${isActive
+                                            ? "border-blue-500 bg-blue-50"
+                                            : "border-gray-200"
+                                        }`}
                                 >
-                                    <div className="flex items-center justify-between">
+                                    <RadioGroupItem
+                                        value={option.value.toString()}
+                                        id={`q${currentId}-${option.value}`}
+                                    />
+
+                                    <Label
+                                        htmlFor={`q${currentId}-${option.value}`}
+                                        className="flex-1 cursor-pointer text-gray-700"
+                                    >
                                         <span>{option.label}</span>
-                                    </div>
-                                </Label>
-                            </motion.div >
-                        ))}
+                                    </Label>
+                                </motion.div>
+                            );
+                        })}
                     </RadioGroup>
+
                 </motion.div>
 
                 {/* Navigation */}
@@ -206,11 +216,19 @@ export default function ZungScale({ onNavigateToEducation }) {
 
                     <Button
                         onClick={handleNext}
-                        disabled={!answers[currentId]}
+                        disabled={!answers[currentId] || submitting}
                         className="cursor-pointer flex-1 h-12 rounded-xl bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {currentQuestion === questions.length - 1 ? 'Selesai' : 'Selanjutnya'}
-                        <ArrowRight className="w-5 h-5 ml-2" />
+                    > {submitting ? (
+                        <span className="flex items-center gap-2">
+                            <Loader2 className="animate-spin h-5 w-5" />
+                            Mengirim...
+                        </span>
+                    ) : (
+                        <>
+                            {currentQuestion === questions.length - 1 ? 'Selesai' : 'Selanjutnya'}
+                            <ArrowRight className="w-5 h-5 ml-2" />
+                        </>
+                    )}
                     </Button>
                 </div>
 

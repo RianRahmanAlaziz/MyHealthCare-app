@@ -56,24 +56,6 @@ export default function ResearchConsent({ onNavigateToRoleSelection, onNavigateT
                                     Mengajukan permohonan izin penelitian dan pengambilan data di RSUD Kabupaten Tangerang untuk tugas akhir berjudul:
                                     <strong>“E-Modul Keperawatan dalam Mereduksi Ansietas pada Klien Hemodialisa di RSUD Kabupaten Tangerang.”</strong>
                                 </p>
-                                <div className="mt-2 p-4 bg-blue-50 rounded-xl">
-                                    <div className="">
-                                        <p><strong>NIM: 221030122185 </strong></p>
-                                        <p><strong>Arimbi Qayla Darmaisya</strong></p>
-                                    </div>
-                                    <div className="pt-2">
-                                        <p><strong>NIM: 221030122187 </strong></p>
-                                        <p><strong>Elis Holisoh</strong></p>
-                                    </div>
-                                    <div className="pt-2">
-                                        <p><strong>NIM: 221030122198 </strong></p>
-                                        <p><strong>Melani Putri Yuliana</strong></p>
-                                    </div>
-                                    <div className="pt-2">
-                                        <p><strong>NIM: 221030122204 </strong></p>
-                                        <p><strong>Dini Kusumaningsih</strong></p>
-                                    </div>
-                                </div>
                             </section>
 
                             <section>

@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { ArrowRight, Stethoscope } from 'lucide-react';
+import { ArrowRight, Stethoscope, Loader2 } from 'lucide-react';
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
 
 export default function NurseDemographics({ onNavigateToEducation }) {
+    const [loading, setLoading] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         nip: '',
@@ -23,6 +25,9 @@ export default function NurseDemographics({ onNavigateToEducation }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (loading) return; // ⛔ cegah double submit
+
+        setLoading(true);
 
         try {
             const res = await axiosInstance.post("/perawat", {
@@ -44,6 +49,8 @@ export default function NurseDemographics({ onNavigateToEducation }) {
         } catch (error) {
             console.error("Gagal menyimpan:", error.response?.data || error);
             toast.error(error.response?.data?.message || "Gagal menyimpan data");
+        } finally {
+            setLoading(false); // ✅ pastikan selalu berhenti
         }
 
     };
@@ -226,10 +233,19 @@ export default function NurseDemographics({ onNavigateToEducation }) {
 
                         <Button
                             type="submit"
-                            className="w-full h-14 rounded-xl bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg cursor-pointer"
-                        >
-                            Lanjutkan
-                            <ArrowRight className="w-5 h-5 ml-2" />
+                            disabled={loading}
+                            className={`w-full h-14 rounded-xl bg-linear-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg ${loading ? "opacity-70 cursor-not-allowed" : "cursor-pointer"}`}
+                        >   {loading ? (
+                            <>
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                Menyimpan...
+                            </>
+                        ) : (
+                            <>
+                                Lanjutkan
+                                <ArrowRight className="w-5 h-5 ml-2" />
+                            </>
+                        )}
                         </Button>
                     </form>
                 </div>

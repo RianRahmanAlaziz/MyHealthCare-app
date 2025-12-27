@@ -45,7 +45,7 @@ export default function DemographicsPage() {
     }, [router]);
 
     const onNavigateToEducation = () => {
-        router.push("/nurse/education-module");
+        router.replace("/nurse/education-module");
     };
     return (
         <NurseDemographics onNavigateToEducation={onNavigateToEducation} />
