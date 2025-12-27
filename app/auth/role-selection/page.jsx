@@ -1,13 +1,15 @@
 'use client'
 import { useState, useEffect } from 'react';
-import { Stethoscope, User, ShieldCheck } from 'lucide-react';
+import { Stethoscope, User, ShieldCheck, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
-import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
 import axiosInstance from '@/lib/axiosInstance';
 
 export default function RoleSelectionPage() {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [selectedRole, setSelectedRole] = useState(null);
+
     useEffect(() => {
         document.title = "Role Selection | HealthCare Research";
         const user = JSON.parse(localStorage.getItem("user"));
@@ -22,6 +24,11 @@ export default function RoleSelectionPage() {
     }, [router]);
 
     const onSelectRole = async (roles) => {
+        if (loading) return;
+
+        setLoading(true);
+        setSelectedRole(roles);
+
         try {
             const token = localStorage.getItem('token');
 
@@ -44,16 +51,27 @@ export default function RoleSelectionPage() {
             setTimeout(() => {
                 if (roles === 'Perawat') router.push('/nurse/consent-screen');
                 if (roles === 'Pasient') router.push('/patient/consent-screen');
-                if (roles === 'Admin') router.push('/dashboard');
             }, 800);
 
         } catch (err) {
             console.error(err);
             toast.error('Terjadi kesalahan server');
+        } finally {
+            setLoading(false);
         }
     };
     return (
         <div className="min-h-screen bg-linear-to-br from-blue-50 via-teal-50 to-white">
+            {loading && (
+                <div className="fixed inset-0 bg-white/70 backdrop-blur flex items-center justify-center z-50">
+                    <div className="flex flex-col items-center gap-3">
+                        <Loader2 className="w-10 h-10 animate-spin text-teal-600" />
+                        <p className="text-gray-700 text-sm">
+                            Memproses {selectedRole}...
+                        </p>
+                    </div>
+                </div>
+            )}
             <div className="min-h-screen flex flex-col items-center justify-center p-6">
                 <div className="w-full max-w-2xl">
                     {/* Header */}
@@ -67,6 +85,7 @@ export default function RoleSelectionPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         {/* Nurse Card */}
                         <button
+                            disabled={loading}
                             onClick={() => onSelectRole('Perawat')}
                             className="group bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                         >
@@ -84,6 +103,7 @@ export default function RoleSelectionPage() {
 
                         {/* Patient Card */}
                         <button
+                            disabled={loading}
                             onClick={() => onSelectRole('Pasient')}
                             className="group bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                         >
@@ -97,17 +117,6 @@ export default function RoleSelectionPage() {
                                 </p>
                                 <div className="w-full h-1 bg-linear-to-r from-teal-400 to-teal-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
-                        </button>
-                    </div>
-
-                    {/* Admin Access */}
-                    <div className="text-center">
-                        <button
-                            // onClick={() => onSelectRole('admin')}
-                            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors text-sm cursor-pointer"
-                        >
-                            <ShieldCheck className="w-4 h-4" />
-                            Akses Admin
                         </button>
                     </div>
                 </div>

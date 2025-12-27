@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify' // ✅ Tambahkan ini
 import 'react-toastify/dist/ReactToastify.css' // ✅ Import CSS
@@ -11,6 +11,7 @@ import { STEP_ROUTE_MAP } from "@/lib/stepRouteMap";
 
 export default function LoginPage() {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     // ✅ Cek apakah sudah login
     useEffect(() => {
@@ -25,6 +26,9 @@ export default function LoginPage() {
 
 
     const handleLogin = async (identifier, password) => {
+        if (loading) return; // ⛔ cegah double submit
+        setLoading(true);
+
         try {
             const res = await axiosInstance.post("/auth/login", {
                 identifier,
@@ -53,6 +57,8 @@ export default function LoginPage() {
                 err.response?.data?.error ||
                 "Login gagal. Periksa kembali Nomor Telepon dan password Anda."
             );
+        } finally {
+            setLoading(false); // ✅ selalu reset
         }
     };
 
@@ -61,6 +67,9 @@ export default function LoginPage() {
     };
 
     return (
-        <Login onNavigateToRegistration={onNavigateToRegistration} handleLogin={handleLogin} />
+        <Login
+            onNavigateToRegistration={onNavigateToRegistration}
+            handleLogin={handleLogin}
+            loading={loading} />
     )
 }

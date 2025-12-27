@@ -1,17 +1,20 @@
 'use client'
-import axios from "axios";
-import { useState } from 'react';
+
+import { useState, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Lock, Phone, User } from 'lucide-react';
-import { toast } from 'react-toastify' // ✅ Tambahkan ini
+import { ArrowLeft, Lock, Phone, User, Loader2 } from 'lucide-react';
+import { toast } from 'react-toastify'
 import axiosInstance from '@/lib/axiosInstance';
 
 export default function Registration({ onNavigateToLogin }) {
     const [step, setStep] = useState(1);
+    const [checkingPhone, setCheckingPhone] = useState(false);
+    const [phoneExists, setPhoneExists] = useState(false);
     const [loading, setLoading] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -22,7 +25,39 @@ export default function Registration({ onNavigateToLogin }) {
         formData.confirmPassword.length > 0 &&
         formData.password === formData.confirmPassword;
 
+    const checkPhone = async (phone) => {
+        if (phone.length < 8) {
+            setPhoneExists(false);
+            return;
+        }
+
+        try {
+            setCheckingPhone(true);
+            const res = await axiosInstance.post("/auth/check-phone", { phone });
+            setPhoneExists(res.data.exists);
+        } catch {
+            setPhoneExists(false);
+        } finally {
+            setCheckingPhone(false);
+        }
+    };
+
+    const debounceTimer = useRef(null);
+
+    const debouncedCheckPhone = (phone) => {
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+
+        debounceTimer.current = setTimeout(() => {
+            checkPhone(phone);
+        }, 600);
+    };
+
+
+
     const handleRegister = async () => {
+        if (loading) return;
         if (formData.password !== formData.confirmPassword) {
             setErrorMsg("Password dan konfirmasi tidak sama");
             return;
@@ -58,13 +93,15 @@ export default function Registration({ onNavigateToLogin }) {
                 return;
             }
             toast.error('Terjadi kesalahan pada server');
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (loading) return;
+
         if (step === 1) {
             setStep(2);
         } else {
@@ -82,6 +119,7 @@ export default function Registration({ onNavigateToLogin }) {
 
                 {/* Back Button */}
                 <button
+                    disabled={loading}
                     onClick={onNavigateToLogin}
                     className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors cursor-pointer"
                 >
@@ -93,12 +131,14 @@ export default function Registration({ onNavigateToLogin }) {
                 <div className="flex items-center justify-center gap-2 mb-8">
                     {/* Step 1 */}
                     <button
+                        disabled={loading}
                         onClick={() => setStep(1)}
                         className={`cursor-pointer h-2 w-16 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-teal-500' : 'bg-gray-200 hover:bg-gray-300'}`}
                     />
 
                     {/* Step 2 */}
                     <button
+                        disabled={loading}
                         onClick={() => setStep(2)}
                         className={`cursor-pointer h-2 w-16 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-teal-500' : 'bg-gray-200 hover:bg-gray-300'}`}
                     />
@@ -126,6 +166,7 @@ export default function Registration({ onNavigateToLogin }) {
                                         <Input
                                             id="name"
                                             name="name"
+                                            disabled={loading}
                                             type="text"
                                             placeholder="Nama Anda"
                                             value={formData.name}
@@ -145,14 +186,45 @@ export default function Registration({ onNavigateToLogin }) {
                                         <Input
                                             id="phone"
                                             name="phone"
+                                            disabled={loading}
                                             type="tel"
                                             placeholder="0812-3456-7890"
                                             value={formData.phone}
-                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                            className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setFormData({ ...formData, phone: value });
+                                                debouncedCheckPhone(value);
+                                            }}
+                                            className={`pl-12 h-12 rounded-xl transition-all ${phoneExists ? "border-red-500 focus:ring-red-400" : "border-gray-200 focus:ring-teal-400"}`}
                                             required
-
                                         />
+                                        {checkingPhone && (
+                                            <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                Mengecek nomor...
+                                            </p>
+                                        )}
+
+                                        {!checkingPhone && formData.phone.length >= 8 && (
+                                            phoneExists ? (
+                                                <motion.p
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    className="text-sm text-red-600 mt-1"
+                                                >
+                                                    ✗ Nomor sudah terdaftar
+                                                </motion.p>
+                                            ) : (
+                                                <motion.p
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    className="text-sm text-green-600 mt-1"
+                                                >
+                                                    ✓ Nomor tersedia
+                                                </motion.p>
+                                            )
+                                        )}
+
                                     </div>
                                 </div>
 
@@ -249,9 +321,17 @@ export default function Registration({ onNavigateToLogin }) {
 
                         <Button
                             type="submit"
+                            disabled={loading || phoneExists || checkingPhone}
                             className="w-full h-12 bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white rounded-xl shadow-lg cursor-pointer"
                         >
-                            {step === 1 ? 'Lanjutkan' : 'Daftar'}
+                            {loading ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Memproses...
+                                </>
+                            ) : (
+                                step === 1 ? 'Lanjutkan' : 'Daftar'
+                            )}
                         </Button>
                     </form>
                 </motion.div>

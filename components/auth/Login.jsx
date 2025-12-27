@@ -4,13 +4,11 @@ import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { HeartPulse, Lock, Phone } from 'lucide-react';
+import { HeartPulse, Lock, Phone, Loader2 } from 'lucide-react';
 
-export default function Login({ onNavigateToRegistration, handleLogin }) {
+export default function Login({ onNavigateToRegistration, handleLogin, loading }) {
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
-
-
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6">
@@ -46,6 +44,7 @@ export default function Login({ onNavigateToRegistration, handleLogin }) {
                                 <Input
                                     id="identifier"
                                     name="identifier"
+                                    disabled={loading}
                                     type="text"
                                     placeholder="0812-3456-7890"
                                     value={identifier}
@@ -65,6 +64,7 @@ export default function Login({ onNavigateToRegistration, handleLogin }) {
                                 <Input
                                     id="password"
                                     name="password"
+                                    disabled={loading}
                                     type="password"
                                     placeholder="••••••••"
                                     value={password}
@@ -86,9 +86,17 @@ export default function Login({ onNavigateToRegistration, handleLogin }) {
 
                         <Button
                             type="submit"
+                            disabled={loading}
                             className="w-full h-12 bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white rounded-xl shadow-lg cursor-pointer"
                         >
-                            Masuk
+                            {loading ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                    Memproses...
+                                </>
+                            ) : (
+                                "Masuk"
+                            )}
                         </Button>
                     </form>
 
