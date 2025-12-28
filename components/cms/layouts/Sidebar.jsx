@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
 import Sidelink from '../common/Sidelink'
-import { Users, LayoutDashboard, SquareUser, User, FolderKanban, ShieldUser, BookOpenText, GalleryHorizontalEnd, Building2, BriefcaseBusiness, Blocks, ListCheck, ListChecks } from 'lucide-react'
+import { Users, LayoutDashboard, SquareUser, User, FolderKanban, ShieldUser, BookOpenText, GalleryHorizontalEnd, Blocks, ListChecks } from 'lucide-react'
 
 function Sidebar() {
     return (
