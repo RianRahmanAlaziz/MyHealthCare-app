@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Image from "next/image";
-import { Music, Wind, Brain, Heart, CheckCircle } from 'lucide-react';
+import { Music, Wind, ArrowLeft, Heart, CheckCircle } from 'lucide-react';
 import * as LucideIcons from "lucide-react";
 import axiosInstance from '@/lib/axiosInstance';
 
@@ -12,11 +12,6 @@ export default function InterventionSelection({ onSelectIntervention }) {
     const [loading, setLoading] = useState(true);
     const [completed, setCompleted] = useState([]);
 
-
-    useEffect(() => {
-        fetchInterventions();
-        fetchCompleted();
-    }, []);
 
     const fetchCompleted = async () => {
         try {
@@ -37,6 +32,26 @@ export default function InterventionSelection({ onSelectIntervention }) {
             setLoading(false);
         }
     };
+
+    const handleLogout = async () => {
+        try {
+            await axiosInstance.post("/auth/logout");
+        } catch (error) {
+            console.warn("Logout error:", error);
+        } finally {
+            // 🧹 bersihkan auth
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+
+            // ✅ client-side navigation
+            window.location.href = "/auth/login";
+        }
+    };
+
+    useEffect(() => {
+        fetchInterventions();
+        fetchCompleted();
+    }, []);
 
     if (loading) {
         return (
@@ -106,7 +121,13 @@ export default function InterventionSelection({ onSelectIntervention }) {
     return (
         <div className="min-h-screen p-6 pb-32">
             <div className="max-w-4xl mx-auto py-8">
-
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors cursor-pointer"
+                >
+                    <LucideIcons.LogOut className="w-5 h-5 mr-2" />
+                    LogOut
+                </button>
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-teal-700 mb-2">Pilih Teknik Relaksasi</h1>
