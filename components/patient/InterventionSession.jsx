@@ -172,7 +172,6 @@ export default function InterventionSession({ onNavigateToSelection }) {
                             className="absolute inset-0 w-full h-full object-cover opacity-60"
                             preload="metadata"
                             playsInline
-                            muted
                         />
 
 
