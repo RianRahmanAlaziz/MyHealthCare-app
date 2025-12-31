@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Tabs from '@/components/ui/tabs';
 import axiosInstance from '@/lib/axiosInstance';
-import { BookOpen, CheckCircle2 } from 'lucide-react';
+import { BookOpen, CheckCircle2, Download } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export default function NurseEducationModule({ onNavigateToLoginDashboard }) {
@@ -124,6 +124,7 @@ export default function NurseEducationModule({ onNavigateToLoginDashboard }) {
                         className="w-full h-12 rounded-xl cursor-pointer bg-linear-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white" >
                         Lanjutkan
                     </Button>
+
                 </DialogContent>
             </Dialog>
         </div>

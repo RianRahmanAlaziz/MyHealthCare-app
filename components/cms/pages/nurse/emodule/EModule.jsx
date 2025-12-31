@@ -32,6 +32,7 @@ export default function EModule() {
         modalDataDelete,
         openModalDelete,
         handleEdit,
+        handlePageChange
     } = useEmodule();
 
     const onNavigateToAddModul = () => {

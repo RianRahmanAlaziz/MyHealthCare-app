@@ -74,6 +74,18 @@ export default function Tabs({ modules, completedModules, toggleModule }) {
                                     "Tandai Sebagai Selesai"
                                 )}
                             </button>
+                            <button
+                                disabled={!module.file_url}
+                                onClick={() => {
+                                    if (module.file_url) {
+                                        window.open(module.file_url, "_blank");
+                                    }
+                                }}
+                                className={`h-12 w-12 flex items-center justify-center rounded-xl border-2 transition ${module.file_url ? "border-blue-500 text-blue-600 hover:bg-blue-50 cursor-pointer" : "border-gray-300 text-gray-400 cursor-not-allowed"}`}
+                                title={module.file_url ? "Download Modul" : "File tidak tersedia"}
+                            >
+                                <Download className="w-5 h-5" />
+                            </button>
                         </div>
                     </div>
                 )

@@ -1,12 +1,15 @@
 'use client'
 import Select from "react-select";
-import * as LucideIcons from "lucide-react";
+import { File } from "lucide-react";
 import React, { useState, useRef, useEffect } from 'react'
 import useEmodule from '@/components/cms/hooks/nurse/useEmodule';
 import CKEditor from '@/components/ui/CKEditorWrapper';
 
 
 export default function InputModule() {
+    const [file, setFile] = useState(null);
+    const [processingFile, setProcessingFile] = useState(false);
+    const inputRef = useRef(null);
 
     useEffect(() => {
         document.title = "Dashboard | Add E-Module";
@@ -29,6 +32,39 @@ export default function InputModule() {
             };
         });
     }
+
+    function handleFileChange(e) {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
+
+        const allowedTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ];
+
+        if (!allowedTypes.includes(selectedFile.type)) {
+            toast.error("File harus PDF, DOC, atau DOCX");
+            e.target.value = "";
+            return;
+        }
+
+        setProcessingFile(true);
+
+        // simulasi proses (misalnya validasi / prepare upload)
+        setTimeout(() => {
+            setFile(selectedFile);
+            setProcessingFile(false);
+        }, 800);
+    }
+
+
+    function removePreview() {
+        setFile(null);
+        if (inputRef.current) inputRef.current.value = "";
+    }
+
+
     return (
         <>
             <div className="grid grid-cols-12 gap-6 mt-15">
@@ -108,22 +144,100 @@ export default function InputModule() {
                             </div>
 
                             <div className="flex justify-center flex-col md:flex-row gap-2 mt-5">
-                                <a href="/dashboard/nurse/e-module"
-                                    className="btn py-3 border-slate-300 dark:border-darkmode-400 text-slate-500 w-full md:w-52">
+                                <a
+                                    href="/dashboard/nurse/e-module"
+                                    className={`btn py-3 border-slate-300 w-full md:w-52 ${processingFile ? "opacity-50 pointer-events-none" : ""
+                                        }`}
+                                >
                                     Cancel
                                 </a>
                                 <button
                                     type="button"
-                                    onClick={() => handleSaveEmodul()}
+                                    disabled={processingFile}
+                                    onClick={() => handleSaveEmodul(file)}
                                     className="btn py-3 btn-primary w-full md:w-52"
                                 >
-                                    Save
+                                    {processingFile ? "Processing..." : "Save"}
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="col-span-12 2xl:col-span-3">
+                    <div className="2xl:border-l -mb-10 pb-10">
+                        <div className="2xl:pl-6 grid grid-cols-12 gap-x-6 2xl:gap-x-0 gap-y-6">
+                            <div className="intro-x col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-12 mt-3 2xl:mt-8">
+                                <div className="intro-x flex items-center h-10">
+                                    <h2 className="text-lg font-medium truncate mr-5">
+                                        File
+                                    </h2>
+                                </div>
+                                <div className="mt-5">
+                                    <div className="box px-5 py-3 mb-3 flex items-center zoom-in">
+                                        <div className="col-span-12 sm:col-span-12">
+                                            <label className="form-label">Upload File</label>
+                                            <div className="border-2 border-dashed dark:border-darkmode-400 rounded-md pt-4">
+                                                <div className="flex flex-wrap px-4 cursor-pointer" id="preview-container3">
+                                                    {file && (
+                                                        <div className="file w-24 h-24 relative image-fit mb-5 mr-5 cursor-pointer zoom-in">
+                                                            <div className="w-3/5 file__icon file__icon--file mx-auto">
+                                                                <div className="file__icon__file-name">
+                                                                    <File />
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                title="Remove this image?"
+                                                                className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2" onClick={removePreview}>
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    className="w-4 h-4 cursor-pointer"
+                                                                    viewBox="0 0 24 24"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="2"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                >
+                                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {processingFile && (
+                                                        <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+                                                            <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                                            Memproses File...
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="px-4 pb-4 flex items-center relative cursor-pointer">
 
+                                                    <File className="w-4 h-4 mr-2 cursor-pointer" />
+                                                    <span className="text-primary mr-1 cursor-pointer">Upload a file</span>
+                                                    or drag and
+                                                    drop
+                                                    <input
+                                                        id="input"
+                                                        name="file"
+                                                        type="file"
+                                                        accept=".pdf,.doc,.docx"
+                                                        ref={inputRef}
+                                                        disabled={processingFile}
+                                                        onChange={handleFileChange}
+                                                        className="w-full h-full top-0 left-0 absolute opacity-0 cursor-pointer"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div >
 
         </>

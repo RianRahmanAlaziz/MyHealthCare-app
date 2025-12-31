@@ -20,8 +20,9 @@ export default function useEmodule(emodul = null) {
     });
     const [formData, setFormData] = useState({
         name: "",
-        icon: "",
         content: "",
+        file: null,
+        file_url: null, // ✅ WAJIB
     });
     const iconOptions = [
         { value: "Activity", label: "Activity" },
@@ -95,6 +96,9 @@ export default function useEmodule(emodul = null) {
         payload.append("icon", data.icon);
         payload.append("content", data.content);
 
+        if (file) {
+            payload.append("file", file);
+        }
 
         if (isEdit) payload.append("_method", "PUT");
 
@@ -136,13 +140,11 @@ export default function useEmodule(emodul = null) {
 
             setFormData({
                 name: item.name,
-                icon: item.icon,
                 content: item.content,
+                file: item.file ?? null,           // ✅ PENTING
+                file_url: item.file_url ?? null,   // ✅ PENTING
             });
 
-            setSelectedIcon(
-                iconOptions.find((opt) => opt.value === item.icon) || null
-            );
 
         } catch (err) {
             toast.error("Gagal mengambil data E Module!");
