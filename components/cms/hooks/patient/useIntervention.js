@@ -15,7 +15,6 @@ export default function useIntervention(interventionId = null) {
     const [isOpenDelete, setIsOpenDelete] = useState(false);
     const [editId, setEditId] = useState(interventionId);
     const [isEdit, setIsEdit] = useState(false);
-    const [selectedDuration, setSelectedDuration] = useState(null)
     const [selectedIcon, setSelectedIcon] = useState(null)
     const [selectedBenefits, setSelectedBenefits] = useState([])
     const [selectedInstructions, setSelectedInstructions] = useState([])
@@ -23,15 +22,51 @@ export default function useIntervention(interventionId = null) {
         title: '',
     });
     const [materials, setMaterials] = useState([
-        { title: "", content: "" }
+        { title: "", content: "", gambar: null, preview: null }
     ]);
 
     const handleAddMaterial = () => {
         setMaterials(prev => [
             ...prev,
-            { title: "", content: "" }
+            { title: "", content: "", gambar: null }
         ]);
     };
+
+    const MAX_SIZE = 2 * 1024 * 1024;
+    const handleMaterialImageChange = (index, file) => {
+        if (!file) return;
+        if (file.size > MAX_SIZE) {
+            toast.error("Ukuran gambar maksimal 2 MB");
+            return;
+        }
+        const updated = [...materials];
+
+        // revoke preview lama (hindari memory leak)
+        if (updated[index].preview) {
+            URL.revokeObjectURL(updated[index].preview);
+        }
+
+        updated[index].gambar = file;
+        updated[index].preview = URL.createObjectURL(file);
+        updated[index].gambar_url = null;
+
+        setMaterials(updated);
+    };
+
+    const handleRemoveMaterialImage = (index) => {
+        const updated = [...materials];
+
+        if (updated[index].preview) {
+            URL.revokeObjectURL(updated[index].preview);
+        }
+
+        updated[index].gambar = null;
+        updated[index].preview = null;
+        updated[index].gambar_url = null;
+
+        setMaterials(updated);
+    };
+
 
     const handleMaterialChange = (index, field, value) => {
         const updated = [...materials];
@@ -47,18 +82,11 @@ export default function useIntervention(interventionId = null) {
     const [formData, setFormData] = useState({
         name: "",
         slug: "",
-        duration: null,
         icon: "",
         benefits: [],
         instructions: [],
     })
 
-    const durationOptions = [
-        { value: 300, label: "5 Menit" },
-        { value: 600, label: "10 Menit" },
-        { value: 900, label: "15 Menit" },
-        { value: 1200, label: "20 Menit" },
-    ];
 
     const iconOptions = [
         { value: "Activity", label: "Activity" },
@@ -126,13 +154,11 @@ export default function useIntervention(interventionId = null) {
             setFormData({
                 name: item.name ?? '',
                 slug: item.slug ?? '',
-                duration: item.duration ?? null,
                 icon: item.icon ?? '',
                 benefits: safeParse(item.benefits),
                 instructions: safeParse(item.instructions)
             })
 
-            setSelectedDuration(durationOptions.find(d => d.value === item.duration) ?? null)
             setSelectedIcon(iconOptions.find(i => i.value === item.icon) ?? null)
             setSelectedBenefits(safeParse(item.benefits))
             setSelectedInstructions(safeParse(item.instructions))
@@ -147,7 +173,6 @@ export default function useIntervention(interventionId = null) {
 
         payload.append("name", data.name);
         payload.append("slug", data.slug);
-        payload.append("duration", data.duration);
         payload.append("icon", data.icon);
 
         data.benefits.forEach((item, i) => {
@@ -161,6 +186,10 @@ export default function useIntervention(interventionId = null) {
         materials.forEach((item, i) => {
             payload.append(`materials[${i}][title]`, item.title);
             payload.append(`materials[${i}][content]`, item.content);
+
+            if (item.gambar instanceof File) {
+                payload.append(`materials[${i}][gambar]`, item.gambar);
+            }
         });
 
         if (file) payload.append("video", file);
@@ -215,20 +244,18 @@ export default function useIntervention(interventionId = null) {
             const item = res.data.data;
             const titles = safeParse(item.title);
             const contents = safeParse(item.content);
+            const gambars = item.gambar ?? [];
+            const gambarUrls = item.gambar_url || [];
 
             setFormData({
                 name: item.name,
                 slug: item.slug,
-                duration: item.duration,
                 icon: item.icon,
                 benefits: safeParse(item.benefits),
                 instructions: safeParse(item.instructions),
                 video_url: item.video_url
             });
 
-            setSelectedDuration(
-                durationOptions.find((opt) => opt.value === item.duration) || null
-            );
             setSelectedIcon(
                 iconOptions.find((opt) => opt.value === item.icon) || null
             );
@@ -238,12 +265,18 @@ export default function useIntervention(interventionId = null) {
             if (titles.length && contents.length) {
                 setMaterials(
                     titles.map((t, i) => ({
+
                         title: t,
-                        content: contents[i] ?? ""
+                        content: contents[i] ?? "",
+                        gambar: null,              // file baru (jika upload ulang)
+                        preview: null,             // preview dari file baru
+                        gambar_url: gambarUrls[i] ?? null // 🔥 gambar lama
                     }))
                 );
             } else {
-                setMaterials([{ title: "", content: "" }]);
+                setMaterials([
+                    { title: "", content: "", gambar: null, preview: null, gambar_url: null }
+                ]);
             }
 
         } catch (err) {
@@ -326,9 +359,6 @@ export default function useIntervention(interventionId = null) {
     return {
         selectedInstructions,
         setSelectedInstructions,
-        selectedDuration,
-        setSelectedDuration,
-        durationOptions,
         iconOptions,
         selectedIcon,
         setSelectedIcon,
@@ -358,6 +388,8 @@ export default function useIntervention(interventionId = null) {
         handleAddMaterial,
         handleMaterialChange,
         materials,
-        handleRemoveMaterial
+        handleRemoveMaterial,
+        handleMaterialImageChange,
+        handleRemoveMaterialImage
     };
 }

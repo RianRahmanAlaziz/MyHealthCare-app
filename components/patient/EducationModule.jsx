@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 
 export default function EducationModule({ onNavigateToIntervention }) {
     const [expandedSection, setExpandedSection] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [progress, setProgress] = useState(0);
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
@@ -16,22 +17,28 @@ export default function EducationModule({ onNavigateToIntervention }) {
 
     useEffect(() => {
         if (!id) return;
-
+        setLoading(true);
         axiosInstance
             .get(`/intervention/${id}/education`)
             .then(res => {
                 const titles = res.data.title || [];
                 const contents = res.data.content || [];
+                const images = res.data.gambar || [];
 
                 const merged = titles.map((title, i) => ({
                     title,
                     content: contents[i] ?? "",
+                    image: images[i] ?? null,
                 }));
 
                 setSections(merged);
-            });
+            })
+            .finally(() => setLoading(false));
     }, [id]);
 
+    useEffect(() => {
+        document.title = "Edukasi Teknik Relaksasi | HealthCare Research";
+    }, []);
 
     const toggleSection = (index) => {
         if (expandedSection === index) {
@@ -62,15 +69,25 @@ export default function EducationModule({ onNavigateToIntervention }) {
                 <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-gray-700">Progress Pembelajaran</span>
-                        <span className="text-teal-600">{Math.round(progress)}%</span>
+                        {loading ? (
+                            <div className="h-4 w-10 bg-gray-200 rounded animate-pulse" />
+                        ) : (
+                            <span className="text-teal-600">{Math.round(progress)}%</span>
+                        )}
                     </div>
+
                     <div className="bg-gray-200 h-3 rounded-full overflow-hidden">
-                        <div
-                            className="bg-linear-to-r from-teal-500 to-blue-500 h-full transition-all duration-500"
-                            style={{ width: `${progress}%` }}
-                        />
+                        {loading ? (
+                            <div className="h-full w-1/3 bg-gray-300 animate-pulse" />
+                        ) : (
+                            <div
+                                className="bg-linear-to-r from-teal-500 to-blue-500 h-full transition-all duration-500"
+                                style={{ width: `${progress}%` }}
+                            />
+                        )}
                     </div>
                 </div>
+
 
                 {/* Hero Image */}
                 {/* <div className="mb-6 rounded-2xl overflow-hidden shadow-lg">
@@ -85,46 +102,82 @@ export default function EducationModule({ onNavigateToIntervention }) {
                 </div> */}
 
                 {/* Accordion */}
-                <div className="space-y-4 mb-6">
-                    {sections.map((section, index) => (
-                        <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                            <button
-                                onClick={() => toggleSection(index)}
-                                className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                {loading ? (
+                    <div className="space-y-4 mb-6 animate-pulse">
+                        {[1, 2, 3].map((i) => (
+                            <div
+                                key={i}
+                                className="bg-white rounded-2xl shadow-lg p-6"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div
-                                        className={`w-10 h-10 rounded-full flex items-center justify-center ${progress >= ((index + 1) / sections.length) * 100
-                                            ? "bg-linear-to-br from-teal-400 to-blue-500"
-                                            : "bg-gray-200"
-                                            }`}
-                                    >
-                                        {progress >= ((index + 1) / sections.length) * 100 ? (
-                                            <CheckCircle className="w-5 h-5 text-white" />
-                                        ) : (
-                                            <span className="text-gray-600">{index + 1}</span>
-                                        )}
-                                    </div>
-                                    <h3 className="text-gray-900 text-left">{section.title}</h3>
+                                    <div className="w-10 h-10 rounded-full bg-gray-200" />
+                                    <div className="h-4 bg-gray-200 rounded w-2/3" />
                                 </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="space-y-4 mb-6">
+                        {sections.map((section, index) => (
+                            <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                                <button
+                                    onClick={() => toggleSection(index)}
+                                    className="w-full flex items-center justify-between p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center ${progress >= ((index + 1) / sections.length) * 100
+                                                ? "bg-linear-to-br from-teal-400 to-blue-500"
+                                                : "bg-gray-200"
+                                                }`}
+                                        >
+                                            {progress >= ((index + 1) / sections.length) * 100 ? (
+                                                <CheckCircle className="w-5 h-5 text-white" />
+                                            ) : (
+                                                <span className="text-gray-600">{index + 1}</span>
+                                            )}
+                                        </div>
+                                        <h3 className="text-gray-900 text-left">{section.title}</h3>
+                                    </div>
 
-                                {expandedSection === index ? (
-                                    <ChevronUp className="w-5 h-5 text-gray-400" />
-                                ) : (
-                                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                                    {expandedSection === index ? (
+                                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                                    ) : (
+                                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                                    )}
+                                </button>
+
+                                {expandedSection === index && (
+                                    <div className="px-6 pb-6">
+                                        <div className="pl-14 space-y-4">
+
+                                            {/* GAMBAR */}
+                                            {typeof section.image === "string" &&
+                                                section.image.trim() !== "" &&
+                                                section.image !== "null" && (
+                                                    <img
+                                                        src={section.image}
+                                                        alt=""
+                                                        className="w-full max-h-64 object-cover rounded-xl shadow"
+                                                        onError={(e) => (e.currentTarget.style.display = "none")}
+                                                    />
+                                                )}
+
+
+                                            {/* CONTENT */}
+                                            <p className="text-gray-700 leading-relaxed">
+                                                {section.content}
+                                            </p>
+
+                                        </div>
+                                    </div>
                                 )}
-                            </button>
 
-                            {expandedSection === index && (
-                                <div className="px-6 pb-6">
-                                    <div className="pl-14">
-                                        <p className="text-gray-700 leading-relaxed">{section.content}</p>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
 
                 {/* Info Card */}
                 <div className="bg-linear-to-br from-blue-50 to-teal-50 rounded-2xl p-6 border border-teal-100 mb-6">

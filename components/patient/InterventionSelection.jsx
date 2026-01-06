@@ -11,6 +11,7 @@ export default function InterventionSelection({ onSelectIntervention }) {
     const [interventions, setInterventions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [completed, setCompleted] = useState([]);
+    const [durations, setDurations] = useState({});
 
 
     const fetchCompleted = async () => {
@@ -126,7 +127,7 @@ export default function InterventionSelection({ onSelectIntervention }) {
                     className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors cursor-pointer"
                 >
                     <LucideIcons.LogOut className="w-5 h-5 mr-2" />
-                    LogOut
+                    Logout
                 </button>
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -164,6 +165,13 @@ export default function InterventionSelection({ onSelectIntervention }) {
                                         src={intervention.video_url}
                                         className="w-full h-full object-cover rounded-md"
                                         preload="metadata"
+                                        onLoadedMetadata={(e) => {
+                                            const videoDuration = Math.ceil(e.target.duration);
+                                            setDurations(prev => ({
+                                                ...prev,
+                                                [intervention.id]: videoDuration
+                                            }));
+                                        }}
                                     />
                                     <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-lg">
                                         {IconComponent && <IconComponent className="w-5 h-5 text-white" />}
@@ -199,7 +207,11 @@ export default function InterventionSelection({ onSelectIntervention }) {
                                     </div>
 
                                     <div className="text-sm text-gray-500">
-                                        Durasi: {Math.ceil(intervention.duration / 60)} menit
+                                        Durasi:{" "}
+                                        {durations[intervention.id]
+                                            ? Math.ceil(durations[intervention.id] / 60)
+                                            : "..."}{" "}
+                                        menit
                                     </div>
                                 </div>
                             </button>

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Link from 'next/link';
 import * as LucideIcons from "lucide-react";
-import { FileVideoCamera } from 'lucide-react';
+import { FileVideoCamera, Image } from 'lucide-react';
 import useIntervention from '@/components/cms/hooks/patient/useIntervention';
 import dynamic from 'next/dynamic';
 
@@ -23,9 +23,6 @@ export default function InputIntervention() {
     const {
         selectedInstructions,
         setSelectedInstructions,
-        selectedDuration,
-        setSelectedDuration,
-        durationOptions,
         iconOptions,
         selectedIcon,
         setSelectedIcon,
@@ -40,14 +37,16 @@ export default function InputIntervention() {
         handleAddMaterial,
         handleMaterialChange,
         materials,
-        handleRemoveMaterial
+        handleRemoveMaterial,
+        handleMaterialImageChange,
+        handleRemoveMaterialImage
     } = useIntervention();
 
     useEffect(() => {
         document.title = "Dashboard | Add Intervention";
     }, []);
 
-    function handleImageChange(e) {
+    function handleVideoChange(e) {
         const selectedFile = e.target.files[0]
         if (!selectedFile) return
 
@@ -98,14 +97,6 @@ export default function InputIntervention() {
         });
     }
 
-
-    function handleDurationChange(selected) {
-        setSelectedDuration(selected);
-        setFormData((prev) => ({
-            ...prev,
-            duration: selected?.value || null,
-        }));
-    }
 
     function generateSlug(text) {
         return text
@@ -195,34 +186,6 @@ export default function InputIntervention() {
 
                                                 <div className="form-help text-right">Maximum character 0/70</div>
 
-                                            </div>
-                                        </div>
-                                        <div className="form-inline items-start flex-col xl:flex-row mt-5 pt-5 first:mt-0 first:pt-0">
-                                            <div className="form-label xl:w-64 xl:mr-10!">
-                                                <div className="text-left">
-                                                    <div className="flex items-center">
-                                                        <div className="font-medium">Duration</div>
-                                                        <div
-                                                            className="ml-2 px-2 py-0.5 bg-slate-200 text-slate-600 dark:bg-darkmode-300 dark:text-slate-400 text-xs rounded-md">
-                                                            Required</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="w-full mt-3 xl:mt-0 flex-1">
-                                                <Select
-                                                    id="duration"
-                                                    name="duration"
-                                                    placeholder="-- Pilih Duration --"
-                                                    options={durationOptions}
-                                                    value={selectedDuration}
-                                                    onChange={handleDurationChange}
-                                                    classNamePrefix="react-select"
-                                                    isSearchable={false}
-                                                />
-
-                                                {errors.duration && (
-                                                    <div className="text-danger text-xs mt-1">{errors.duration}</div>
-                                                )}
                                             </div>
                                         </div>
                                         <div className="form-inline items-start flex-col xl:flex-row mt-5 pt-5 first:mt-0 first:pt-0">
@@ -397,11 +360,65 @@ export default function InputIntervention() {
                                                         />
                                                     </div>
                                                 </div>
+
+                                                <div className="form-inline items-start flex-col xl:flex-row mt-10">
+                                                    <label htmlFor="gambar" className="form-label w-full xl:w-64 xl:mr-10!">
+                                                        <div className="text-left">
+                                                            <div className="flex items-center">
+                                                                <div className="font-medium">Gambar</div>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                    <div
+                                                        className="w-full mt-3 xl:mt-0 flex-1 border-2 border-dashed dark:border-darkmode-400 rounded-md pt-4">
+                                                        {/* PREVIEW */}
+                                                        {materials[index]?.preview && (
+                                                            <div className=" w-24 h-24 relative image-fit mb-5 mx-5 cursor-pointer zoom-in">
+                                                                <img
+                                                                    src={materials[index].preview}
+                                                                    alt="Preview"
+                                                                    className="rounded-md"
+                                                                />
+                                                                <div
+                                                                    title="Remove this image?"
+                                                                    className="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"
+                                                                    onClick={() => handleRemoveMaterialImage(index)}>
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        className="w-4 h-4 cursor-pointer"
+                                                                        viewBox="0 0 24 24"
+                                                                        fill="none"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth="2"
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    >
+                                                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        <div className="px-4 pb-4 mt-5 flex items-center justify-center cursor-pointer relative">
+                                                            <Image className="w-4 h-4 mr-2" />
+                                                            <span className="text-primary mr-1">Upload images</span> or drag and drop
+                                                            <input
+                                                                id="gambar"
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={(e) =>
+                                                                    handleMaterialImageChange(index, e.target.files[0])
+                                                                }
+                                                                className=" w-full h-full top-0 left-0 absolute opacity-0" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 {/* BUTTON HAPUS */}
                                                 {materials.length > 1 && (
                                                     <button
                                                         type="button"
-                                                        className="btn btn-danger btn-sm absolute top-38 right-0"
+                                                        className="btn btn-danger btn-sm absolute top-64 right-0"
                                                         onClick={() => handleRemoveMaterial(index)}
                                                     >
                                                         <LucideIcons.Trash2 className="w-4 h-4" />
@@ -499,7 +516,7 @@ export default function InputIntervention() {
                                                     <input id="input" name="video" type="file" accept="video/*"
                                                         ref={inputRef}
                                                         disabled={processingVideo || submitting}
-                                                        onChange={handleImageChange}
+                                                        onChange={handleVideoChange}
                                                         className="w-full h-full top-0 left-0 absolute opacity-0 cursor-pointer"
                                                     />
                                                 </div>

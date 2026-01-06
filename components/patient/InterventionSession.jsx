@@ -25,6 +25,8 @@ export default function InterventionSession({ onNavigateToSelection }) {
     const [isPlaying, setIsPlaying] = useState(false)
     const [timeElapsed, setTimeElapsed] = useState(0)
     const [isCompleted, setIsCompleted] = useState(false)
+    const [duration, setDuration] = useState(0)
+
     // === AMBIL DATA INTERVENTION ===
     useEffect(() => {
         if (!id) return
@@ -58,11 +60,11 @@ export default function InterventionSession({ onNavigateToSelection }) {
 
     // === TIMER ===
     useEffect(() => {
-        if (!isPlaying || isCompleted || !currentIntervention) return
+        if (!isPlaying || isCompleted || !duration) return
 
         const interval = setInterval(() => {
             setTimeElapsed(prev => {
-                if (prev >= currentIntervention.duration) {
+                if (prev >= duration) {
                     setIsPlaying(false)
                     setIsCompleted(true)
                     return prev
@@ -72,7 +74,7 @@ export default function InterventionSession({ onNavigateToSelection }) {
         }, 1000)
 
         return () => clearInterval(interval)
-    }, [isPlaying, isCompleted, currentIntervention])
+    }, [isPlaying, isCompleted, duration])
 
     /* ================= VIDEO CONTROL ================= */
     useEffect(() => {
@@ -108,6 +110,19 @@ export default function InterventionSession({ onNavigateToSelection }) {
             videoRef.current.pause();
         }
     }, [isPlaying, isCompleted]);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const syncTime = () => {
+            setTimeElapsed(Math.floor(video.currentTime));
+        };
+
+        video.addEventListener("timeupdate", syncTime);
+        return () => video.removeEventListener("timeupdate", syncTime);
+    }, []);
+
 
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);
@@ -147,7 +162,10 @@ export default function InterventionSession({ onNavigateToSelection }) {
         )
     }
 
-    const progress = (timeElapsed / currentIntervention.duration) * 100;
+    const progress = duration
+        ? (timeElapsed / duration) * 100
+        : 0;
+
 
     return (
         <div className="min-h-screen p-6">
@@ -172,6 +190,12 @@ export default function InterventionSession({ onNavigateToSelection }) {
                             className="absolute inset-0 w-full h-full object-cover opacity-60"
                             preload="metadata"
                             playsInline
+                            onLoadedMetadata={() => {
+                                if (videoRef.current) {
+                                    const videoDuration = Math.floor(videoRef.current.duration);
+                                    setDuration(videoDuration);
+                                }
+                            }}
                         />
 
 
@@ -195,7 +219,7 @@ export default function InterventionSession({ onNavigateToSelection }) {
                     <div className="p-8">
                         <div className="text-center mb-6">
                             <div className="text-4xl text-gray-900 mb-2">
-                                {formatTime(timeElapsed)} / {formatTime(currentIntervention.duration)}
+                                {formatTime(timeElapsed)} / {formatTime(duration)}
                             </div>
                             <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
                                 <div
