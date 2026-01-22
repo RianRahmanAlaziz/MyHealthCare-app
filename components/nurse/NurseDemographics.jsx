@@ -217,8 +217,7 @@ export default function NurseDemographics({ onNavigateToEducation }) {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="Pagi">Pagi (07:00 - 14:00)</SelectItem>
-                                    <SelectItem value="Siang">Siang (14:00 - 21:00)</SelectItem>
-                                    <SelectItem value="Malam">Malam (21:00 - 07:00)</SelectItem>
+                                    <SelectItem value="Siang">Siang (14:00 - 19:00)</SelectItem>
                                     <SelectItem value="Shift Bergantian">Shift Bergantian</SelectItem>
                                 </SelectContent>
                             </Select>
