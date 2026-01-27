@@ -60,6 +60,23 @@ function InputUsers({ formData, setFormData, errors, setErrors }) {
                 )}
             </div>
             <div className="col-span-6 sm:col-span-12">
+                <label htmlFor="email" className="form-label">Email</label>
+                <input
+                    id="email"
+                    type="text"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="form-control"
+                    placeholder="email"
+                    required
+                    autoFocus
+                />
+                {errors?.email && (
+                    <small className="text-danger">{errors.email[0]}</small>
+                )}
+            </div>
+            <div className="col-span-6 sm:col-span-12">
                 <label htmlFor="phone" className="form-label">No Telepon</label>
                 <input
                     id="phone"

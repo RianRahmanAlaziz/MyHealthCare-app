@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Lock, Phone, User, Loader2 } from 'lucide-react';
+import { ArrowLeft, Lock, Phone, User, Loader2, Mail } from 'lucide-react';
 import { toast } from 'react-toastify'
 import axiosInstance from '@/lib/axiosInstance';
 
@@ -18,6 +18,7 @@ export default function Registration({ onNavigateToLogin }) {
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
+        email: '',
         password: '',
         confirmPassword: '',
     });
@@ -69,6 +70,7 @@ export default function Registration({ onNavigateToLogin }) {
             const res = await axiosInstance.post("/auth/register", {
                 name: formData.name,
                 phone: formData.phone,
+                email: formData.email,
                 password: formData.password,
             });
 
@@ -227,7 +229,24 @@ export default function Registration({ onNavigateToLogin }) {
 
                                     </div>
                                 </div>
-
+                                {/* Email */}
+                                <div className="space-y-2">
+                                    <Label htmlFor="email" className="text-gray-700">Email</Label>
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                        <Input
+                                            id="email"
+                                            name="email"
+                                            disabled={loading}
+                                            type="text"
+                                            placeholder="email@example.com"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            className="pl-12 h-12 border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-400"
+                                            required
+                                        />
+                                    </div>
+                                </div>
 
                             </>
                         ) : (

@@ -108,6 +108,7 @@ export default function useUser() {
     const openEditUserModal = (user) => {
         setFormData({
             name: user.name || '',
+            email: user.email || '',
             phone: user.phone || '',
             email: user.email || '',
             password: '',

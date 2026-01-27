@@ -71,6 +71,7 @@ function UsersList() {
                         <thead>
                             <tr>
                                 <th className="whitespace-nowrap">NAME</th>
+                                <th className=" whitespace-nowrap">EMAIL</th>
                                 <th className="text-center whitespace-nowrap">ROLE</th>
                                 <th className="text-center whitespace-nowrap">ACTIONS</th>
                             </tr>
@@ -96,6 +97,11 @@ function UsersList() {
                                             <td>
                                                 <span className="font-medium whitespace-nowrap">{user.name}</span>
                                                 <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">{user.phone}</div>
+                                            </td>
+                                            <td className="">
+                                                <div className="flex items-center  ">
+                                                    {user.email}
+                                                </div>
                                             </td>
                                             <td className="w-40">
                                                 <div className="flex items-center justify-center ">
@@ -165,17 +171,18 @@ function UsersList() {
                         </ul>
                     </nav>
                 </div>
-            </div>
+            </div >
 
             {/* 🔹 Modal Add/Edit */}
-            <Modal
+            <Modal Modal
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={() => setIsOpen(false)
+                }
                 title={modalData.title}
                 onSave={handleSaveUser}
             >
                 <InputUsers formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} />
-            </Modal>
+            </Modal >
 
             <Modaldelete
                 isOpenDelete={isOpenDelete}
